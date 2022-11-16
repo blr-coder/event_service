@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package event_type_proto;
+option go_package = "grpc/event_type_proto";
+
+service EventTypeService {
+  rpc Create(CreateEventTypeRequest) returns (EventType);
+  rpc Get(GetEventTypeRequest) returns (EventType);
+  rpc List(google.protobuf.Empty) returns (EventTypes);
+  rpc Update(UpdateEventTypeRequest) returns (EventType);
+  rpc Delete(GetEventTypeRequest) returns (google.protobuf.Empty);
+}
+message CreateEventTypeRequest {
+  string title = 1;
+}
+message GetEventTypeRequest {
+  int64 id = 1;
+}
+message EventType {
+  int64 id = 1;
+  string title = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+message EventTypes {
+  repeated EventType event_types = 1;
+}
+message UpdateEventTypeRequest {
+  int64 id = 1;
+  google.protobuf.StringValue title = 2;
+}
