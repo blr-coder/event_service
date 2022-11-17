@@ -2,9 +2,12 @@ package main
 
 import (
 	"event_service/internal/config"
+	"event_service/internal/event/repositories"
 	eventgrpc "event_service/internal/event/transport/grpc"
+	"event_service/internal/event/usecases"
 	"event_service/pkg/log"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	"net"
 )
@@ -20,8 +23,17 @@ func runEventApp() (err error) {
 	}
 	logrus.Info("init config... OK")
 
+	db, err := sqlx.Open("postgres", appConfig.PostgresConnLink)
+	if err != nil {
+		return err
+	}
+	logrus.Info("init DB... OK")
+
+	repo := repositories.NewPsqlRepository(db)
+	useCase := usecases.NewUseCase(repo)
+
 	eventServer := eventgrpc.NewEventServiceServer()
-	eventTypeServer := eventgrpc.NewEventTypeServiceServer()
+	eventTypeServer := eventgrpc.NewEventTypeServiceServer(useCase)
 
 	grpcServer := eventgrpc.NewGRPCServer(eventServer, eventTypeServer)
 	logrus.Info("init grpcServer... OK")

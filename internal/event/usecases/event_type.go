@@ -15,6 +15,6 @@ func NewEventTypeUseCase(repo *repositories.Repository) *EventTypeUseCase {
 }
 
 func (c *EventTypeUseCase) Create(ctx context.Context, createEventType *models.CreateEventTypeInput) (*models.EventType, error) {
-
-	return nil, nil
+	// TODO: Validate
+	return c.repository.EventType.Create(ctx, createEventType)
 }

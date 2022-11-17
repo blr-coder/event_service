@@ -29,7 +29,7 @@ func NewPsqlRepository(db *sqlx.DB) *Repository {
 	}
 }
 
-// NewMongoRepository for example
+// NewMongoRepository for example, we can switch between storages very quickly
 func NewMongoRepository(collection *mongo.Collection) *Repository {
 	return &Repository{
 		EventType: mongo_store.NewEventTypeMongoStore(collection),
