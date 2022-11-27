@@ -2,7 +2,7 @@ package mongo_store
 
 import (
 	"context"
-	"event_service/internal/event/models"
+	"event_service/internal/event/repositories/repository_models"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -14,7 +14,18 @@ func NewEventTypeMongoStore(mongoCollection *mongo.Collection) *EventTypeMongoSt
 	return &EventTypeMongoStore{collection: mongoCollection}
 }
 
-func (s *EventTypeMongoStore) Create(ctx context.Context, createEventType *models.CreateEventTypeInput) (*models.EventType, error) {
+func (s *EventTypeMongoStore) Create(
+	ctx context.Context,
+	createEventType *repository_models.CreateEventTypeRepositoryDTO,
+) (*repository_models.EventTypeRepositoryDTO, error) {
+
+	return nil, nil
+}
+
+func (s *EventTypeMongoStore) Get(
+	ctx context.Context,
+	getEventType *repository_models.GetEventTypeRepositoryDTO,
+) (*repository_models.EventTypeRepositoryDTO, error) {
 
 	return nil, nil
 }

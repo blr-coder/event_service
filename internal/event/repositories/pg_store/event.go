@@ -2,7 +2,8 @@ package pg_store
 
 import (
 	"context"
-	"event_service/internal/event/models"
+	"event_service/internal/event/usecases/usecase_models"
+
 	// DB driver
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -16,7 +17,7 @@ func NewEventPsqlStore(database *sqlx.DB) *EventPsqlStore {
 	return &EventPsqlStore{db: database}
 }
 
-func (s *EventPsqlStore) Create(ctx context.Context, createEvent *models.CreateEventInput) (*models.Event, error) {
+func (s *EventPsqlStore) Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error) {
 
 	return nil, nil
 }

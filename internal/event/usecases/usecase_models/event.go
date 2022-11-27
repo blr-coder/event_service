@@ -1,4 +1,4 @@
-package models
+package usecase_models
 
 import "time"
 

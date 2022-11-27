@@ -2,16 +2,17 @@ package usecases
 
 import (
 	"context"
-	"event_service/internal/event/models"
 	"event_service/internal/event/repositories"
+	"event_service/internal/event/usecases/usecase_models"
 )
 
 type IEventTypeUseCase interface {
-	Create(ctx context.Context, createEventType *models.CreateEventTypeInput) (*models.EventType, error)
+	Create(ctx context.Context, createEventType *usecase_models.CreateEventTypeInput) (*usecase_models.EventType, error)
+	Get(ctx context.Context, getEventType *usecase_models.GetEventTypeInput) (*usecase_models.EventType, error)
 }
 
 type IEventUseCase interface {
-	Create(ctx context.Context, createEvent *models.CreateEventInput) (*models.Event, error)
+	Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error)
 }
 
 type UseCase struct {

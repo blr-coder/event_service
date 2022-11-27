@@ -2,7 +2,7 @@ package mongo_store
 
 import (
 	"context"
-	"event_service/internal/event/models"
+	"event_service/internal/event/usecases/usecase_models"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -14,7 +14,7 @@ func NewEventMongoStore(collection *mongo.Collection) *EventMongoStore {
 	return &EventMongoStore{collection: collection}
 }
 
-func (s *EventMongoStore) Create(ctx context.Context, createEvent *models.CreateEventInput) (*models.Event, error) {
+func (s *EventMongoStore) Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error) {
 
 	return nil, nil
 }

@@ -2,19 +2,21 @@ package repositories
 
 import (
 	"context"
-	"event_service/internal/event/models"
 	"event_service/internal/event/repositories/mongo_store"
 	"event_service/internal/event/repositories/pg_store"
+	"event_service/internal/event/repositories/repository_models"
+	"event_service/internal/event/usecases/usecase_models"
 	"github.com/jmoiron/sqlx"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type IEventTypeRepository interface {
-	Create(ctx context.Context, createEventType *models.CreateEventTypeInput) (*models.EventType, error)
+	Create(ctx context.Context, createEventType *repository_models.CreateEventTypeRepositoryDTO) (*repository_models.EventTypeRepositoryDTO, error)
+	Get(ctx context.Context, getEventType *repository_models.GetEventTypeRepositoryDTO) (*repository_models.EventTypeRepositoryDTO, error)
 }
 
 type IEventRepository interface {
-	Create(ctx context.Context, createEvent *models.CreateEventInput) (*models.Event, error)
+	Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error)
 }
 
 type Repository struct {
