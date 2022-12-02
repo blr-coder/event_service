@@ -26,17 +26,9 @@ func (c *EventTypeUseCase) Create(ctx context.Context, createEventType *usecase_
 	return RepoEventTypeDtoToUseCase(eventType), nil
 }
 
-func (c *EventTypeUseCase) Get(ctx context.Context, getEventType *usecase_models.GetEventTypeInput) (*usecase_models.EventType, error) {
+func (c *EventTypeUseCase) List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, error) {
 
-	eventType, err := c.repository.EventType.Get(
-		ctx,
-		&repository_models.GetEventTypeRepositoryDTO{ID: getEventType.ID},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return RepoEventTypeDtoToUseCase(eventType), nil
+	return nil, nil
 }
 
 func useCaseCreateEventTypeDtoToRepo(
@@ -47,8 +39,8 @@ func useCaseCreateEventTypeDtoToRepo(
 
 func RepoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeRepositoryDTO) *usecase_models.EventType {
 	return &usecase_models.EventType{
-		ID:        repoEventType.ID,
 		Title:     repoEventType.Title,
 		CreatedAt: repoEventType.CreatedAt,
+		UpdatedAt: repoEventType.UpdatedAt,
 	}
 }

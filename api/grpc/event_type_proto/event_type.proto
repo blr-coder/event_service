@@ -9,26 +9,28 @@ option go_package = "grpc/event_type_proto";
 
 service EventTypeService {
   rpc Create(CreateEventTypeRequest) returns (EventType);
-  rpc Get(GetEventTypeRequest) returns (EventType);
-  rpc List(google.protobuf.Empty) returns (EventTypes);
+  rpc List(EventTypeFilter) returns (EventTypes);
   rpc Update(UpdateEventTypeRequest) returns (EventType);
-  rpc Delete(GetEventTypeRequest) returns (google.protobuf.Empty);
+  rpc Delete(DeleteEventTypeRequest) returns (google.protobuf.Empty);
 }
 message CreateEventTypeRequest {
   string title = 1;
 }
-message GetEventTypeRequest {
-  int64 id = 1;
-}
 message EventType {
-  int64 id = 1;
-  string title = 2;
-  google.protobuf.Timestamp created_at = 3;
+  string title = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+message EventTypeFilter {
+  repeated string titles = 1;
+  google.protobuf.StringValue search = 3;
 }
 message EventTypes {
   repeated EventType event_types = 1;
 }
 message UpdateEventTypeRequest {
-  int64 id = 1;
-  google.protobuf.StringValue title = 2;
+  string title = 1;
+}
+message DeleteEventTypeRequest {
+  string title = 1;
 }

@@ -5,6 +5,7 @@ import (
 	"event_service/api/grpc/event_type_proto"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
+	"event_service/pkg/utils"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -33,29 +34,15 @@ func (s *EventTypeServiceServer) Create(
 	return eventTypeModelToGRPC(eventType), err
 }
 
-func (s *EventTypeServiceServer) Get(
-	ctx context.Context,
-	in *event_type_proto.GetEventTypeRequest,
-) (*event_type_proto.EventType, error) {
+func (s *EventTypeServiceServer) List(ctx context.Context, filter *event_type_proto.EventTypeFilter) (*event_type_proto.EventTypes, error) {
 
-	eventType, err := s.useCase.EventType.Get(
-		ctx,
-		&usecase_models.GetEventTypeInput{
-			ID: in.GetId(),
-		},
-	)
+	types, err := s.useCase.EventType.List(ctx, grpcListFilterToModelFilter(filter))
 	if err != nil {
 		// TODO: Add decodeError func
 		return nil, err
 	}
 
-	return eventTypeModelToGRPC(eventType), err
-}
-
-func (s *EventTypeServiceServer) List(ctx context.Context, in *emptypb.Empty) (*event_type_proto.EventTypes, error) {
-
-	//TODO: implement me
-	panic("implement me")
+	return eventTypesModelToGRPC(types), err
 }
 
 func (s *EventTypeServiceServer) Update(
@@ -69,7 +56,7 @@ func (s *EventTypeServiceServer) Update(
 
 func (s *EventTypeServiceServer) Delete(
 	ctx context.Context,
-	in *event_type_proto.GetEventTypeRequest,
+	in *event_type_proto.DeleteEventTypeRequest,
 ) (*emptypb.Empty, error) {
 
 	//TODO: implement me
@@ -88,8 +75,27 @@ func eventTypeModelToGRPC(
 	eventType *usecase_models.EventType,
 ) *event_type_proto.EventType {
 	return &event_type_proto.EventType{
-		Id:        eventType.ID,
 		Title:     eventType.Title,
 		CreatedAt: timestamppb.New(eventType.CreatedAt),
+		UpdatedAt: timestamppb.New(eventType.UpdatedAt),
 	}
+}
+
+func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *usecase_models.EventTypeFilter {
+	return &usecase_models.EventTypeFilter{
+		Titles: grpcFilter.Titles,
+		Search: utils.Pointer(grpcFilter.GetSearch().GetValue()),
+	}
+}
+
+func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.EventTypes {
+	grpcTypes := &event_type_proto.EventTypes{
+		EventTypes: make([]*event_type_proto.EventType, 0, len(types)),
+	}
+
+	for _, t := range types {
+		grpcTypes.EventTypes = append(grpcTypes.EventTypes, eventTypeModelToGRPC(t))
+	}
+
+	return grpcTypes
 }

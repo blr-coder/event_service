@@ -3,15 +3,18 @@ package usecase_models
 import "time"
 
 type EventType struct {
-	ID        int64     `json:"id"`
 	Title     string    `json:"title"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type CreateEventTypeInput struct {
 	Title string `json:"title"`
 }
 
-type GetEventTypeInput struct {
-	ID int64 `json:"id"`
+type EventTypeFilter struct {
+	Titles []string `json:"titles"`
+	Search *string  `json:"search"`
 }
+
+type EventTypes []*EventType

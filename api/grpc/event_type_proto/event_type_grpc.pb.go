@@ -24,10 +24,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EventTypeServiceClient interface {
 	Create(ctx context.Context, in *CreateEventTypeRequest, opts ...grpc.CallOption) (*EventType, error)
-	Get(ctx context.Context, in *GetEventTypeRequest, opts ...grpc.CallOption) (*EventType, error)
-	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EventTypes, error)
+	List(ctx context.Context, in *EventTypeFilter, opts ...grpc.CallOption) (*EventTypes, error)
 	Update(ctx context.Context, in *UpdateEventTypeRequest, opts ...grpc.CallOption) (*EventType, error)
-	Delete(ctx context.Context, in *GetEventTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Delete(ctx context.Context, in *DeleteEventTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type eventTypeServiceClient struct {
@@ -47,16 +46,7 @@ func (c *eventTypeServiceClient) Create(ctx context.Context, in *CreateEventType
 	return out, nil
 }
 
-func (c *eventTypeServiceClient) Get(ctx context.Context, in *GetEventTypeRequest, opts ...grpc.CallOption) (*EventType, error) {
-	out := new(EventType)
-	err := c.cc.Invoke(ctx, "/event_type_proto.EventTypeService/Get", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *eventTypeServiceClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EventTypes, error) {
+func (c *eventTypeServiceClient) List(ctx context.Context, in *EventTypeFilter, opts ...grpc.CallOption) (*EventTypes, error) {
 	out := new(EventTypes)
 	err := c.cc.Invoke(ctx, "/event_type_proto.EventTypeService/List", in, out, opts...)
 	if err != nil {
@@ -74,7 +64,7 @@ func (c *eventTypeServiceClient) Update(ctx context.Context, in *UpdateEventType
 	return out, nil
 }
 
-func (c *eventTypeServiceClient) Delete(ctx context.Context, in *GetEventTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *eventTypeServiceClient) Delete(ctx context.Context, in *DeleteEventTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/event_type_proto.EventTypeService/Delete", in, out, opts...)
 	if err != nil {
@@ -88,10 +78,9 @@ func (c *eventTypeServiceClient) Delete(ctx context.Context, in *GetEventTypeReq
 // for forward compatibility
 type EventTypeServiceServer interface {
 	Create(context.Context, *CreateEventTypeRequest) (*EventType, error)
-	Get(context.Context, *GetEventTypeRequest) (*EventType, error)
-	List(context.Context, *emptypb.Empty) (*EventTypes, error)
+	List(context.Context, *EventTypeFilter) (*EventTypes, error)
 	Update(context.Context, *UpdateEventTypeRequest) (*EventType, error)
-	Delete(context.Context, *GetEventTypeRequest) (*emptypb.Empty, error)
+	Delete(context.Context, *DeleteEventTypeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedEventTypeServiceServer()
 }
 
@@ -102,16 +91,13 @@ type UnimplementedEventTypeServiceServer struct {
 func (UnimplementedEventTypeServiceServer) Create(context.Context, *CreateEventTypeRequest) (*EventType, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedEventTypeServiceServer) Get(context.Context, *GetEventTypeRequest) (*EventType, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
-}
-func (UnimplementedEventTypeServiceServer) List(context.Context, *emptypb.Empty) (*EventTypes, error) {
+func (UnimplementedEventTypeServiceServer) List(context.Context, *EventTypeFilter) (*EventTypes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedEventTypeServiceServer) Update(context.Context, *UpdateEventTypeRequest) (*EventType, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedEventTypeServiceServer) Delete(context.Context, *GetEventTypeRequest) (*emptypb.Empty, error) {
+func (UnimplementedEventTypeServiceServer) Delete(context.Context, *DeleteEventTypeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedEventTypeServiceServer) mustEmbedUnimplementedEventTypeServiceServer() {}
@@ -145,26 +131,8 @@ func _EventTypeService_Create_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EventTypeService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetEventTypeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventTypeServiceServer).Get(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/event_type_proto.EventTypeService/Get",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventTypeServiceServer).Get(ctx, req.(*GetEventTypeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _EventTypeService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(EventTypeFilter)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -176,7 +144,7 @@ func _EventTypeService_List_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/event_type_proto.EventTypeService/List",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventTypeServiceServer).List(ctx, req.(*emptypb.Empty))
+		return srv.(EventTypeServiceServer).List(ctx, req.(*EventTypeFilter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -200,7 +168,7 @@ func _EventTypeService_Update_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _EventTypeService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetEventTypeRequest)
+	in := new(DeleteEventTypeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -212,7 +180,7 @@ func _EventTypeService_Delete_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/event_type_proto.EventTypeService/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventTypeServiceServer).Delete(ctx, req.(*GetEventTypeRequest))
+		return srv.(EventTypeServiceServer).Delete(ctx, req.(*DeleteEventTypeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -227,10 +195,6 @@ var EventTypeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _EventTypeService_Create_Handler,
-		},
-		{
-			MethodName: "Get",
-			Handler:    _EventTypeService_Get_Handler,
 		},
 		{
 			MethodName: "List",

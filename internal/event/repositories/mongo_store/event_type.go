@@ -21,11 +21,3 @@ func (s *EventTypeMongoStore) Create(
 
 	return nil, nil
 }
-
-func (s *EventTypeMongoStore) Get(
-	ctx context.Context,
-	getEventType *repository_models.GetEventTypeRepositoryDTO,
-) (*repository_models.EventTypeRepositoryDTO, error) {
-
-	return nil, nil
-}

@@ -26,30 +26,12 @@ func (s *EventTypePsqlStore) Create(
 	query := `
 		INSERT INTO event_types (title) 
 		VALUES ($1)
-		RETURNING id, title, created_at
+		RETURNING title, created_at, updated_at
 	`
 
 	eventType := &repository_models.EventTypeRepositoryDTO{}
 
 	return eventType, errors.WithStack(
 		s.db.GetContext(ctx, eventType, query, createEventType.Title),
-	)
-}
-
-func (s *EventTypePsqlStore) Get(
-	ctx context.Context,
-	getEventType *repository_models.GetEventTypeRepositoryDTO,
-) (*repository_models.EventTypeRepositoryDTO, error) {
-
-	query := `
-		SELECT id, title, created_at, deleted_at 
-		FROM event_types 
-		WHERE id=$1 AND deleted_at IS NULL
-	`
-
-	eventType := &repository_models.EventTypeRepositoryDTO{}
-
-	return eventType, errors.WithStack(
-		s.db.GetContext(ctx, eventType, query, getEventType.ID),
 	)
 }

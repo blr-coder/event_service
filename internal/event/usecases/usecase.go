@@ -8,7 +8,7 @@ import (
 
 type IEventTypeUseCase interface {
 	Create(ctx context.Context, createEventType *usecase_models.CreateEventTypeInput) (*usecase_models.EventType, error)
-	Get(ctx context.Context, getEventType *usecase_models.GetEventTypeInput) (*usecase_models.EventType, error)
+	List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, error)
 }
 
 type IEventUseCase interface {
