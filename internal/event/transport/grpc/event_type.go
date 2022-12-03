@@ -5,7 +5,6 @@ import (
 	"event_service/api/grpc/event_type_proto"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
-	"event_service/pkg/utils"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -82,10 +81,15 @@ func eventTypeModelToGRPC(
 }
 
 func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *usecase_models.EventTypeFilter {
-	return &usecase_models.EventTypeFilter{
+	useCaseFilter := &usecase_models.EventTypeFilter{
 		Titles: grpcFilter.Titles,
-		Search: utils.Pointer(grpcFilter.GetSearch().GetValue()),
 	}
+
+	if grpcFilter.Search != nil {
+		useCaseFilter.Search = &grpcFilter.Search.Value
+	}
+
+	return useCaseFilter
 }
 
 func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.EventTypes {

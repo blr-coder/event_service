@@ -21,3 +21,8 @@ func (s *EventTypeMongoStore) Create(
 
 	return nil, nil
 }
+
+func (s *EventTypeMongoStore) List(ctx context.Context, repositoryFilter *repository_models.EventTypeRepositoryFilter) ([]*repository_models.EventTypeRepositoryDTO, error) {
+
+	return nil, nil
+}

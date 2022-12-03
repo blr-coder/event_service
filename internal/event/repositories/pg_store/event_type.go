@@ -3,7 +3,9 @@ package pg_store
 import (
 	"context"
 	"event_service/internal/event/repositories/repository_models"
+	"fmt"
 	"github.com/pkg/errors"
+	"strings"
 
 	// DB driver
 	"github.com/jmoiron/sqlx"
@@ -34,4 +36,23 @@ func (s *EventTypePsqlStore) Create(
 	return eventType, errors.WithStack(
 		s.db.GetContext(ctx, eventType, query, createEventType.Title),
 	)
+}
+
+func (s *EventTypePsqlStore) List(
+	ctx context.Context,
+	repositoryFilter *repository_models.EventTypeRepositoryFilter,
+) ([]*repository_models.EventTypeRepositoryDTO, error) {
+
+	query := `
+		SELECT title, created_at, updated_at FROM event_types WHERE true
+	`
+
+	// TODO: Need better solution
+	if repositoryFilter.Titles != nil {
+		query = fmt.Sprintf("%s %s", query, "AND title IN ('"+strings.Join(repositoryFilter.Titles, "','")+"')")
+	}
+
+	var types []*repository_models.EventTypeRepositoryDTO
+
+	return types, errors.WithStack(s.db.SelectContext(ctx, &types, query))
 }

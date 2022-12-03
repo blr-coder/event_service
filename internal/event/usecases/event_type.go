@@ -23,12 +23,18 @@ func (c *EventTypeUseCase) Create(ctx context.Context, createEventType *usecase_
 		return nil, err
 	}
 
-	return RepoEventTypeDtoToUseCase(eventType), nil
+	return repoEventTypeDtoToUseCase(eventType), nil
 }
 
 func (c *EventTypeUseCase) List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, error) {
+	// TODO: Validate
 
-	return nil, nil
+	types, err := c.repository.EventType.List(ctx, useCaseFilterEventTypeToRepo(filter))
+	if err != nil {
+		return nil, err
+	}
+
+	return repoEventTypesDtoToUseCase(types), nil
 }
 
 func useCaseCreateEventTypeDtoToRepo(
@@ -37,10 +43,27 @@ func useCaseCreateEventTypeDtoToRepo(
 	return &repository_models.CreateEventTypeRepositoryDTO{Title: createEventTypeUC.Title}
 }
 
-func RepoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeRepositoryDTO) *usecase_models.EventType {
+func repoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeRepositoryDTO) *usecase_models.EventType {
 	return &usecase_models.EventType{
 		Title:     repoEventType.Title,
 		CreatedAt: repoEventType.CreatedAt,
 		UpdatedAt: repoEventType.UpdatedAt,
 	}
+}
+
+func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repository_models.EventTypeRepositoryFilter {
+	return &repository_models.EventTypeRepositoryFilter{
+		Titles: filter.Titles,
+		Search: filter.Search,
+	}
+}
+
+func repoEventTypesDtoToUseCase(types []*repository_models.EventTypeRepositoryDTO) usecase_models.EventTypes {
+	useCaseTypes := make(usecase_models.EventTypes, 0, len(types))
+
+	for _, t := range types {
+		useCaseTypes = append(useCaseTypes, repoEventTypeDtoToUseCase(t))
+	}
+
+	return useCaseTypes
 }

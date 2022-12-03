@@ -12,6 +12,7 @@ import (
 
 type IEventTypeRepository interface {
 	Create(ctx context.Context, createEventType *repository_models.CreateEventTypeRepositoryDTO) (*repository_models.EventTypeRepositoryDTO, error)
+	List(ctx context.Context, repositoryFilter *repository_models.EventTypeRepositoryFilter) ([]*repository_models.EventTypeRepositoryDTO, error)
 }
 
 type IEventRepository interface {
