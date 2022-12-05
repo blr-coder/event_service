@@ -18,3 +18,8 @@ type EventTypeFilter struct {
 }
 
 type EventTypes []*EventType
+
+type UpdateEventTypeInput struct {
+	Title    string `json:"title"`
+	NewTitle string `json:"new_title"`
+}

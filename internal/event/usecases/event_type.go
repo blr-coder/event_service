@@ -37,6 +37,17 @@ func (c *EventTypeUseCase) List(ctx context.Context, filter *usecase_models.Even
 	return repoEventTypesDtoToUseCase(types), nil
 }
 
+func (c *EventTypeUseCase) Update(ctx context.Context, updateEventType *usecase_models.UpdateEventTypeInput) (*usecase_models.EventType, error) {
+	// TODO: Validate
+
+	updatedEventType, err := c.repository.EventType.Update(ctx, useCaseUpdateEventTypeDtoToRepo(updateEventType))
+	if err != nil {
+		return nil, err
+	}
+
+	return repoEventTypeDtoToUseCase(updatedEventType), nil
+}
+
 func useCaseCreateEventTypeDtoToRepo(
 	createEventTypeUC *usecase_models.CreateEventTypeInput,
 ) *repository_models.CreateEventTypeRepositoryDTO {
@@ -66,4 +77,11 @@ func repoEventTypesDtoToUseCase(types []*repository_models.EventTypeRepositoryDT
 	}
 
 	return useCaseTypes
+}
+
+func useCaseUpdateEventTypeDtoToRepo(updateEventTypeUC *usecase_models.UpdateEventTypeInput) *repository_models.UpdateEventTypeRepositoryDTO {
+	return &repository_models.UpdateEventTypeRepositoryDTO{
+		Title:    updateEventTypeUC.Title,
+		NewTitle: updateEventTypeUC.NewTitle,
+	}
 }

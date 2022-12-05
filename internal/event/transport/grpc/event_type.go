@@ -30,6 +30,7 @@ func (s *EventTypeServiceServer) Create(
 		// TODO: Add decodeError func
 		return nil, err
 	}
+
 	return eventTypeModelToGRPC(eventType), err
 }
 
@@ -46,11 +47,16 @@ func (s *EventTypeServiceServer) List(ctx context.Context, filter *event_type_pr
 
 func (s *EventTypeServiceServer) Update(
 	ctx context.Context,
-	in *event_type_proto.UpdateEventTypeRequest,
+	request *event_type_proto.UpdateEventTypeRequest,
 ) (*event_type_proto.EventType, error) {
 
-	//TODO: implement me
-	panic("implement me")
+	eventType, err := s.useCase.EventType.Update(ctx, grpcUpdateEventTypeToModelUpdate(request))
+	if err != nil {
+		// TODO: Add decodeError func
+		return nil, err
+	}
+
+	return eventTypeModelToGRPC(eventType), err
 }
 
 func (s *EventTypeServiceServer) Delete(
@@ -102,4 +108,11 @@ func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.Ev
 	}
 
 	return grpcTypes
+}
+
+func grpcUpdateEventTypeToModelUpdate(grpcUpdate *event_type_proto.UpdateEventTypeRequest) *usecase_models.UpdateEventTypeInput {
+	return &usecase_models.UpdateEventTypeInput{
+		Title:    grpcUpdate.Title,
+		NewTitle: grpcUpdate.NewTitle,
+	}
 }

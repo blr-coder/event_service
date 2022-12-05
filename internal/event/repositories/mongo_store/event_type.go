@@ -26,3 +26,11 @@ func (s *EventTypeMongoStore) List(ctx context.Context, repositoryFilter *reposi
 
 	return nil, nil
 }
+
+func (s *EventTypeMongoStore) Update(
+	ctx context.Context,
+	updateEventType *repository_models.UpdateEventTypeRepositoryDTO,
+) (*repository_models.EventTypeRepositoryDTO, error) {
+
+	return nil, nil
+}

@@ -30,6 +30,7 @@ message EventTypes {
 }
 message UpdateEventTypeRequest {
   string title = 1;
+  string new_title = 2;
 }
 message DeleteEventTypeRequest {
   string title = 1;

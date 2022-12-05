@@ -17,3 +17,8 @@ type EventTypeRepositoryFilter struct {
 	Titles []string `db:"titles"`
 	Search *string  `db:"search"`
 }
+
+type UpdateEventTypeRepositoryDTO struct {
+	Title    string `db:"title"`
+	NewTitle string `db:"new_title"`
+}
