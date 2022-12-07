@@ -5,6 +5,7 @@ import (
 	"event_service/api/grpc/event_type_proto"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
+	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -61,11 +62,10 @@ func (s *EventTypeServiceServer) Update(
 
 func (s *EventTypeServiceServer) Delete(
 	ctx context.Context,
-	in *event_type_proto.DeleteEventTypeRequest,
+	request *event_type_proto.DeleteEventTypeRequest,
 ) (*emptypb.Empty, error) {
 
-	//TODO: implement me
-	panic("implement me")
+	return &empty.Empty{}, s.useCase.EventType.Delete(ctx, grpcDeleteEventTypeToModelUpdate(request))
 }
 
 func grpcCreateEventTypeToModelCreate(
@@ -114,5 +114,11 @@ func grpcUpdateEventTypeToModelUpdate(grpcUpdate *event_type_proto.UpdateEventTy
 	return &usecase_models.UpdateEventTypeInput{
 		Title:    grpcUpdate.Title,
 		NewTitle: grpcUpdate.NewTitle,
+	}
+}
+
+func grpcDeleteEventTypeToModelUpdate(grpcDelete *event_type_proto.DeleteEventTypeRequest) *usecase_models.DeleteEventTypeInput {
+	return &usecase_models.DeleteEventTypeInput{
+		Title: grpcDelete.Title,
 	}
 }

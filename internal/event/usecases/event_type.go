@@ -48,6 +48,11 @@ func (c *EventTypeUseCase) Update(ctx context.Context, updateEventType *usecase_
 	return repoEventTypeDtoToUseCase(updatedEventType), nil
 }
 
+func (c *EventTypeUseCase) Delete(ctx context.Context, deleteEventType *usecase_models.DeleteEventTypeInput) error {
+
+	return c.repository.EventType.Delete(ctx, useCaseDeleteEventTypeDtoToRepo(deleteEventType))
+}
+
 func useCaseCreateEventTypeDtoToRepo(
 	createEventTypeUC *usecase_models.CreateEventTypeInput,
 ) *repository_models.CreateEventTypeRepositoryDTO {
@@ -83,5 +88,11 @@ func useCaseUpdateEventTypeDtoToRepo(updateEventTypeUC *usecase_models.UpdateEve
 	return &repository_models.UpdateEventTypeRepositoryDTO{
 		Title:    updateEventTypeUC.Title,
 		NewTitle: updateEventTypeUC.NewTitle,
+	}
+}
+
+func useCaseDeleteEventTypeDtoToRepo(deleteEventTypeUC *usecase_models.DeleteEventTypeInput) *repository_models.DeleteEventTypeRepositoryDTO {
+	return &repository_models.DeleteEventTypeRepositoryDTO{
+		Title: deleteEventTypeUC.Title,
 	}
 }

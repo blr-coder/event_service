@@ -23,6 +23,10 @@ type IEventTypeRepository interface {
 		ctx context.Context,
 		updateEventType *repository_models.UpdateEventTypeRepositoryDTO,
 	) (*repository_models.EventTypeRepositoryDTO, error)
+	Delete(
+		ctx context.Context,
+		deleteEventType *repository_models.DeleteEventTypeRepositoryDTO,
+	) error
 }
 
 type IEventRepository interface {

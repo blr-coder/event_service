@@ -10,6 +10,7 @@ type IEventTypeUseCase interface {
 	Create(ctx context.Context, createEventType *usecase_models.CreateEventTypeInput) (*usecase_models.EventType, error)
 	List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, error)
 	Update(ctx context.Context, updateEventType *usecase_models.UpdateEventTypeInput) (*usecase_models.EventType, error)
+	Delete(ctx context.Context, deleteEventType *usecase_models.DeleteEventTypeInput) error
 }
 
 type IEventUseCase interface {

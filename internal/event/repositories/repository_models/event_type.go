@@ -22,3 +22,7 @@ type UpdateEventTypeRepositoryDTO struct {
 	Title    string `db:"title"`
 	NewTitle string `db:"new_title"`
 }
+
+type DeleteEventTypeRepositoryDTO struct {
+	Title string `db:"title"`
+}

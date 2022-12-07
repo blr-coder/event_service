@@ -23,3 +23,7 @@ type UpdateEventTypeInput struct {
 	Title    string `json:"title"`
 	NewTitle string `json:"new_title"`
 }
+
+type DeleteEventTypeInput struct {
+	Title string `json:"title"`
+}

@@ -34,3 +34,11 @@ func (s *EventTypeMongoStore) Update(
 
 	return nil, nil
 }
+
+func (s *EventTypeMongoStore) Delete(
+	ctx context.Context,
+	deleteEventType *repository_models.DeleteEventTypeRepositoryDTO,
+) error {
+
+	return nil
+}

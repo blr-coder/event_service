@@ -28,7 +28,7 @@ func (s *EventTypePsqlStore) Create(
 	query := `
 		INSERT INTO event_types (title) 
 		VALUES ($1)
-		RETURNING title, created_at, updated_at
+		RETURNING *
 	`
 
 	eventType := &repository_models.EventTypeRepositoryDTO{}
@@ -44,7 +44,7 @@ func (s *EventTypePsqlStore) List(
 ) (types []*repository_models.EventTypeRepositoryDTO, err error) {
 
 	query := `
-		SELECT title, created_at, updated_at FROM event_types WHERE true
+		SELECT title, created_at, updated_at FROM event_types WHERE deleted_at IS NULL
 	`
 
 	if repositoryFilter.Titles != nil {
@@ -69,12 +69,43 @@ func (s *EventTypePsqlStore) Update(
 		UPDATE event_types SET title=$2, updated_at=(now() AT TIME ZONE 'utc') WHERE title=$1 RETURNING *
 	`
 
-	//_, err := s.db.ExecContext(ctx, query, updateEventType.Title, updateEventType.NewTitle)
-	_, err := s.db.QueryxContext(ctx, query, updateEventType.Title, updateEventType.NewTitle)
+	updatedEventType := &repository_models.EventTypeRepositoryDTO{}
+
+	err := s.db.QueryRowxContext(ctx, query, updateEventType.Title, updateEventType.NewTitle).StructScan(updatedEventType)
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO: Add scan to struct
-	return nil, err
+	return updatedEventType, err
+}
+
+func (s *EventTypePsqlStore) Delete(
+	ctx context.Context,
+	deleteEventType *repository_models.DeleteEventTypeRepositoryDTO,
+) error {
+
+	query := `
+		UPDATE event_types SET 
+		                       updated_at=(now() AT TIME ZONE 'utc'), 
+		                       deleted_at=(now() AT TIME ZONE 'utc') 
+		                   WHERE title=$1 AND deleted_at IS NULL RETURNING *
+	`
+
+	res, err := s.db.ExecContext(ctx, query, deleteEventType.Title)
+	if err != nil {
+		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		// TODO: Add custom err
+		return err
+	}
+
+	if affected == 0 {
+		// TODO: Add custom err
+		return errors.New("affected == 0")
+	}
+
+	return nil
 }
