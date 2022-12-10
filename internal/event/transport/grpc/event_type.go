@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"event_service/api/grpc/event_type_proto"
+	"event_service/internal/event/repositories/repository_models"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
 	"github.com/golang/protobuf/ptypes/empty"
@@ -95,7 +96,37 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 		useCaseFilter.Search = &grpcFilter.Search.Value
 	}
 
+	if grpcFilter.OrderBy != nil {
+		useCaseFilter.OrderBy = grpcOrderByToRepo(grpcFilter.OrderBy)
+	}
+
+	if grpcFilter.OrderDirection != event_type_proto.OrderDirection_EMPTY {
+
+		var direction repository_models.OrderDirection
+
+		switch grpcFilter.OrderDirection {
+		case event_type_proto.OrderDirection_ASC:
+			direction = repository_models.OrderDirectionTypeASC
+			useCaseFilter.OrderDirection = &direction
+		case event_type_proto.OrderDirection_DESC:
+			direction = repository_models.OrderDirectionTypeDESC
+			useCaseFilter.OrderDirection = &direction
+		}
+	}
+
 	return useCaseFilter
+}
+
+func grpcOrderByToRepo(orderBy []event_type_proto.OrderBy) (orderByList repository_models.OrderByList) {
+	for _, item := range orderBy {
+		switch item {
+		case event_type_proto.OrderBy_TITLE:
+			orderByList = append(orderByList, repository_models.OrderByTypeTitle)
+		case event_type_proto.OrderBy_CREATED_AT:
+			orderByList = append(orderByList, repository_models.OrderByTypeCreatedAt)
+		}
+	}
+	return orderByList
 }
 
 func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.EventTypes {

@@ -68,19 +68,11 @@ func repoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeReposit
 }
 
 func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repository_models.EventTypeRepositoryFilter {
-
-	// TODO: Add orderDirection to usecase_models.EventTypeFilter
-	var orderDirection repository_models.OrderDirection
-
-	orderDirection = repository_models.OrderDirectionTypeDESC
-
 	return &repository_models.EventTypeRepositoryFilter{
-		Titles: filter.Titles,
-		Search: filter.Search,
-		OrderBy: repository_models.OrderByList{
-			repository_models.OrderByTypeCreatedAt,
-		},
-		OrderDirection: &orderDirection,
+		Titles:         filter.Titles,
+		Search:         filter.Search,
+		OrderBy:        filter.OrderBy,
+		OrderDirection: filter.OrderDirection,
 	}
 }
 

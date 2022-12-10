@@ -59,8 +59,12 @@ func (s *EventTypePsqlStore) List(
 		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(repositoryFilter.OrderBy.Join(), ",")))
 	}
 
-	if repositoryFilter.OrderDirection != nil {
+	if repositoryFilter.OrderDirection != nil && repositoryFilter.OrderBy != nil {
 		query = fmt.Sprintf("%s %s", query, repositoryFilter.OrderDirection)
+	}
+
+	if repositoryFilter.OrderDirection != nil && repositoryFilter.OrderBy == nil {
+		query = fmt.Sprintf("%s ORDER BY created_at %s", query, repositoryFilter.OrderDirection)
 	}
 
 	return types, errors.WithStack(s.db.SelectContext(ctx, &types, query))

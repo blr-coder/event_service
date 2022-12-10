@@ -21,9 +21,23 @@ message EventType {
   google.protobuf.Timestamp created_at = 2;
   google.protobuf.Timestamp updated_at = 3;
 }
+
+enum OrderBy {
+  TITLE = 0;
+  CREATED_AT = 1;
+}
+enum OrderDirection {
+  EMPTY = 0;
+  ASC = 1;
+  DESC = 2;
+}
 message EventTypeFilter {
   repeated string titles = 1;
-  google.protobuf.StringValue search = 3;
+  google.protobuf.StringValue search = 2;
+  repeated OrderBy order_by = 3;
+  OrderDirection order_direction = 4;
+  google.protobuf.UInt64Value page_size = 5;
+  google.protobuf.UInt64Value page_number = 6;
 }
 message EventTypes {
   repeated EventType event_types = 1;

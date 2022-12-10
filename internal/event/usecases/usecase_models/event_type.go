@@ -1,6 +1,9 @@
 package usecase_models
 
-import "time"
+import (
+	"event_service/internal/event/repositories/repository_models"
+	"time"
+)
 
 type EventType struct {
 	Title     string    `json:"title"`
@@ -13,8 +16,10 @@ type CreateEventTypeInput struct {
 }
 
 type EventTypeFilter struct {
-	Titles []string `json:"titles"`
-	Search *string  `json:"search"`
+	Titles         []string                          `json:"titles"`
+	Search         *string                           `json:"search"`
+	OrderBy        repository_models.OrderByList     `json:"order_by"`
+	OrderDirection *repository_models.OrderDirection `json:"order_direction"`
 }
 
 type EventTypes []*EventType

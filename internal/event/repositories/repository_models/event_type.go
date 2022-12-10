@@ -22,7 +22,6 @@ func (o OrderBy) String() string {
 type OrderByList []OrderBy
 
 func (l OrderByList) Join() (strList []string) {
-	//var strList []string
 	for _, val := range l {
 		strList = append(strList, val.String())
 	}
