@@ -55,7 +55,13 @@ func (s *EventTypePsqlStore) List(
 		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("AND title ILIKE '%%%s%%'", *repositoryFilter.Search))
 	}
 
-	// TODO: Add orderBy
+	if repositoryFilter.OrderBy != nil {
+		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(repositoryFilter.OrderBy.Join(), ",")))
+	}
+
+	if repositoryFilter.OrderDirection != nil {
+		query = fmt.Sprintf("%s %s", query, repositoryFilter.OrderDirection)
+	}
 
 	return types, errors.WithStack(s.db.SelectContext(ctx, &types, query))
 }
