@@ -20,6 +20,8 @@ type EventTypeFilter struct {
 	Search         *string                           `json:"search"`
 	OrderBy        repository_models.OrderByList     `json:"order_by"`
 	OrderDirection *repository_models.OrderDirection `json:"order_direction"`
+	PageSize       *uint64                           `json:"page_size"`
+	PageNumber     *uint64                           `json:"page_number"`
 }
 
 type EventTypes []*EventType

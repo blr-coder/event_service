@@ -67,6 +67,11 @@ func (s *EventTypePsqlStore) List(
 		query = fmt.Sprintf("%s ORDER BY created_at %s", query, repositoryFilter.OrderDirection)
 	}
 
+	if repositoryFilter.PageSize != nil && repositoryFilter.PageNumber != nil {
+		offset := *repositoryFilter.PageSize * (*repositoryFilter.PageNumber - 1)
+		query = fmt.Sprintf("%s LIMIT %d OFFSET %d", query, *repositoryFilter.PageSize, offset)
+	}
+
 	return types, errors.WithStack(s.db.SelectContext(ctx, &types, query))
 }
 

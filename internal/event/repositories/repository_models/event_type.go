@@ -50,6 +50,8 @@ type EventTypeRepositoryFilter struct {
 	Search         *string         `db:"search"`
 	OrderBy        OrderByList     `db:"order_by"`
 	OrderDirection *OrderDirection `db:"order_direction"`
+	PageSize       *uint64         `db:"page_size"`
+	PageNumber     *uint64         `db:"page_number"`
 }
 
 type UpdateEventTypeRepositoryDTO struct {

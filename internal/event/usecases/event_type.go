@@ -73,6 +73,8 @@ func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repos
 		Search:         filter.Search,
 		OrderBy:        filter.OrderBy,
 		OrderDirection: filter.OrderDirection,
+		PageSize:       filter.PageSize,
+		PageNumber:     filter.PageNumber,
 	}
 }
 

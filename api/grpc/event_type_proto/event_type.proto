@@ -41,6 +41,7 @@ message EventTypeFilter {
 }
 message EventTypes {
   repeated EventType event_types = 1;
+  uint64 count = 2;
 }
 message UpdateEventTypeRequest {
   string title = 1;

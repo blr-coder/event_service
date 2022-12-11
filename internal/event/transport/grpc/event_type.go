@@ -114,6 +114,13 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 		}
 	}
 
+	if grpcFilter.PageSize != nil {
+		useCaseFilter.PageSize = &grpcFilter.PageSize.Value
+	}
+	if grpcFilter.PageNumber != nil {
+		useCaseFilter.PageNumber = &grpcFilter.PageNumber.Value
+	}
+
 	return useCaseFilter
 }
 
@@ -131,6 +138,7 @@ func grpcOrderByToRepo(orderBy []event_type_proto.OrderBy) (orderByList reposito
 
 func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.EventTypes {
 	grpcTypes := &event_type_proto.EventTypes{
+		Count:      100000,
 		EventTypes: make([]*event_type_proto.EventType, 0, len(types)),
 	}
 
