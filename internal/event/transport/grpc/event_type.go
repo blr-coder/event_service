@@ -38,13 +38,13 @@ func (s *EventTypeServiceServer) Create(
 
 func (s *EventTypeServiceServer) List(ctx context.Context, filter *event_type_proto.EventTypeFilter) (*event_type_proto.EventTypes, error) {
 
-	types, err := s.useCase.EventType.List(ctx, grpcListFilterToModelFilter(filter))
+	types, count, err := s.useCase.EventType.List(ctx, grpcListFilterToModelFilter(filter))
 	if err != nil {
 		// TODO: Add decodeError func
 		return nil, err
 	}
 
-	return eventTypesModelToGRPC(types), err
+	return eventTypesModelToGRPC(types, count), err
 }
 
 func (s *EventTypeServiceServer) Update(
@@ -136,9 +136,9 @@ func grpcOrderByToRepo(orderBy []event_type_proto.OrderBy) (orderByList reposito
 	return orderByList
 }
 
-func eventTypesModelToGRPC(types usecase_models.EventTypes) *event_type_proto.EventTypes {
+func eventTypesModelToGRPC(types usecase_models.EventTypes, count uint64) *event_type_proto.EventTypes {
 	grpcTypes := &event_type_proto.EventTypes{
-		Count:      100000,
+		Count:      count,
 		EventTypes: make([]*event_type_proto.EventType, 0, len(types)),
 	}
 

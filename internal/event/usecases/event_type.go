@@ -26,15 +26,15 @@ func (c *EventTypeUseCase) Create(ctx context.Context, createEventType *usecase_
 	return repoEventTypeDtoToUseCase(eventType), nil
 }
 
-func (c *EventTypeUseCase) List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, error) {
+func (c *EventTypeUseCase) List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, uint64, error) {
 	// TODO: Validate
 
-	types, err := c.repository.EventType.List(ctx, useCaseFilterEventTypeToRepo(filter))
+	types, count, err := c.repository.EventType.List(ctx, useCaseFilterEventTypeToRepo(filter))
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return repoEventTypesDtoToUseCase(types), nil
+	return repoEventTypesDtoToUseCase(types), count, nil
 }
 
 func (c *EventTypeUseCase) Update(ctx context.Context, updateEventType *usecase_models.UpdateEventTypeInput) (*usecase_models.EventType, error) {

@@ -18,7 +18,7 @@ type IEventTypeRepository interface {
 	List(
 		ctx context.Context,
 		repositoryFilter *repository_models.EventTypeRepositoryFilter,
-	) ([]*repository_models.EventTypeRepositoryDTO, error)
+	) ([]*repository_models.EventTypeRepositoryDTO, uint64, error)
 	Update(
 		ctx context.Context,
 		updateEventType *repository_models.UpdateEventTypeRepositoryDTO,

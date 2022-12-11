@@ -41,38 +41,28 @@ func (s *EventTypePsqlStore) Create(
 func (s *EventTypePsqlStore) List(
 	ctx context.Context,
 	repositoryFilter *repository_models.EventTypeRepositoryFilter,
-) (types []*repository_models.EventTypeRepositoryDTO, err error) {
+) (types []*repository_models.EventTypeRepositoryDTO, count uint64, err error) {
 
-	query := `
+	listQuery := `
 		SELECT title, created_at, updated_at FROM event_types WHERE deleted_at IS NULL
 	`
+	countQuery := `
+		SELECT count(*) FROM event_types WHERE deleted_at IS NULL
+	`
 
-	if repositoryFilter.Titles != nil {
-		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("AND title IN ('%s')", strings.Join(repositoryFilter.Titles, "','")))
+	listTypes, args := s.decodeRepositoryFilter(listQuery, repositoryFilter, true)
+	countTypes, args := s.decodeRepositoryFilter(countQuery, repositoryFilter, false)
+
+	err = errors.WithStack(s.db.SelectContext(ctx, &types, listTypes, args...))
+	if err != nil {
+		return nil, 0, err
+	}
+	err = errors.WithStack(s.db.GetContext(ctx, &count, countTypes, args...))
+	if err != nil {
+		return nil, 0, err
 	}
 
-	if repositoryFilter.Search != nil {
-		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("AND title ILIKE '%%%s%%'", *repositoryFilter.Search))
-	}
-
-	if repositoryFilter.OrderBy != nil {
-		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(repositoryFilter.OrderBy.Join(), ",")))
-	}
-
-	if repositoryFilter.OrderDirection != nil && repositoryFilter.OrderBy != nil {
-		query = fmt.Sprintf("%s %s", query, repositoryFilter.OrderDirection)
-	}
-
-	if repositoryFilter.OrderDirection != nil && repositoryFilter.OrderBy == nil {
-		query = fmt.Sprintf("%s ORDER BY created_at %s", query, repositoryFilter.OrderDirection)
-	}
-
-	if repositoryFilter.PageSize != nil && repositoryFilter.PageNumber != nil {
-		offset := *repositoryFilter.PageSize * (*repositoryFilter.PageNumber - 1)
-		query = fmt.Sprintf("%s LIMIT %d OFFSET %d", query, *repositoryFilter.PageSize, offset)
-	}
-
-	return types, errors.WithStack(s.db.SelectContext(ctx, &types, query))
+	return types, count, nil
 }
 
 func (s *EventTypePsqlStore) Update(
@@ -123,4 +113,42 @@ func (s *EventTypePsqlStore) Delete(
 	}
 
 	return nil
+}
+
+func (s *EventTypePsqlStore) decodeRepositoryFilter(
+	query string,
+	filter *repository_models.EventTypeRepositoryFilter,
+	paginate bool,
+) (string, []any) {
+
+	query = fmt.Sprintf("%s", query)
+	var args []any
+
+	if filter.Titles != nil {
+		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("AND title IN ('%s')", strings.Join(filter.Titles, "','")))
+	}
+
+	if filter.Search != nil {
+		search := fmt.Sprintf("%%%s%%", *filter.Search)
+		query = fmt.Sprintf("%s AND title ILIKE ?", query)
+		args = append(args, search)
+	}
+
+	if filter.OrderBy != nil && paginate {
+		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(filter.OrderBy.Join(), ",")))
+	}
+	if filter.OrderDirection != nil && filter.OrderBy != nil && paginate {
+		query = fmt.Sprintf("%s %s", query, filter.OrderDirection)
+	}
+
+	if paginate && filter.PageSize != nil && filter.PageNumber != nil {
+		if *filter.PageNumber == 0 {
+			*filter.PageNumber = 1
+		}
+		offset := *filter.PageSize * (*filter.PageNumber - 1)
+		query = fmt.Sprintf("%s LIMIT %d OFFSET %d", query, *filter.PageSize, offset)
+	}
+
+	query = s.db.Rebind(query)
+	return query, args
 }

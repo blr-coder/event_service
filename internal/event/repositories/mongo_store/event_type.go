@@ -22,9 +22,9 @@ func (s *EventTypeMongoStore) Create(
 	return nil, nil
 }
 
-func (s *EventTypeMongoStore) List(ctx context.Context, repositoryFilter *repository_models.EventTypeRepositoryFilter) ([]*repository_models.EventTypeRepositoryDTO, error) {
+func (s *EventTypeMongoStore) List(ctx context.Context, repositoryFilter *repository_models.EventTypeRepositoryFilter) ([]*repository_models.EventTypeRepositoryDTO, uint64, error) {
 
-	return nil, nil
+	return nil, 0, nil
 }
 
 func (s *EventTypeMongoStore) Update(
