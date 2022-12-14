@@ -3,7 +3,6 @@ package grpc
 import (
 	"context"
 	"event_service/api/grpc/event_type_proto"
-	"event_service/internal/event/repositories/repository_models"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
 	"github.com/golang/protobuf/ptypes/empty"
@@ -97,19 +96,19 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 	}
 
 	if grpcFilter.OrderBy != nil {
-		useCaseFilter.OrderBy = grpcOrderByToRepo(grpcFilter.OrderBy)
+		useCaseFilter.OrderBy = grpcOrderByToUseCase(grpcFilter.OrderBy)
 	}
 
 	if grpcFilter.OrderDirection != event_type_proto.OrderDirection_EMPTY {
 
-		var direction repository_models.OrderDirection
+		var direction usecase_models.OrderDirection
 
 		switch grpcFilter.OrderDirection {
 		case event_type_proto.OrderDirection_ASC:
-			direction = repository_models.OrderDirectionTypeASC
+			direction = usecase_models.OrderDirectionASC
 			useCaseFilter.OrderDirection = &direction
 		case event_type_proto.OrderDirection_DESC:
-			direction = repository_models.OrderDirectionTypeDESC
+			direction = usecase_models.OrderDirectionDESC
 			useCaseFilter.OrderDirection = &direction
 		}
 	}
@@ -124,13 +123,15 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 	return useCaseFilter
 }
 
-func grpcOrderByToRepo(orderBy []event_type_proto.OrderBy) (orderByList repository_models.OrderByList) {
+func grpcOrderByToUseCase(orderBy []event_type_proto.OrderBy) (orderByList []usecase_models.OrderBy) {
 	for _, item := range orderBy {
 		switch item {
 		case event_type_proto.OrderBy_TITLE:
-			orderByList = append(orderByList, repository_models.OrderByTypeTitle)
+			orderByList = append(orderByList, usecase_models.OrderByTypeTitle)
 		case event_type_proto.OrderBy_CREATED_AT:
-			orderByList = append(orderByList, repository_models.OrderByTypeCreatedAt)
+			orderByList = append(orderByList, usecase_models.OrderByTypeCreatedAt)
+		case event_type_proto.OrderBy_ID:
+			orderByList = append(orderByList, usecase_models.OrderByTypeID)
 		}
 	}
 	return orderByList

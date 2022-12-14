@@ -68,14 +68,39 @@ func repoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeReposit
 }
 
 func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repository_models.EventTypeRepositoryFilter {
-	return &repository_models.EventTypeRepositoryFilter{
-		Titles:         filter.Titles,
-		Search:         filter.Search,
-		OrderBy:        filter.OrderBy,
-		OrderDirection: filter.OrderDirection,
-		PageSize:       filter.PageSize,
-		PageNumber:     filter.PageNumber,
+
+	repoFilter := &repository_models.EventTypeRepositoryFilter{
+		Titles:     filter.Titles,
+		Search:     filter.Search,
+		PageSize:   filter.PageSize,
+		PageNumber: filter.PageNumber,
 	}
+
+	if filter.OrderBy != nil {
+		for _, useCaseOrderBy := range filter.OrderBy {
+			switch useCaseOrderBy {
+			case usecase_models.OrderByTypeCreatedAt:
+				repoFilter.OrderBy = append(repoFilter.OrderBy, repository_models.OrderByTypeCreatedAt)
+			case usecase_models.OrderByTypeTitle:
+				repoFilter.OrderBy = append(repoFilter.OrderBy, repository_models.OrderByTypeTitle)
+			case usecase_models.OrderByTypeID:
+				repoFilter.OrderBy = append(repoFilter.OrderBy, repository_models.OrderByTypeID)
+			}
+		}
+	}
+
+	if filter.OrderDirection != nil {
+		switch *filter.OrderDirection {
+		case usecase_models.OrderDirectionASC:
+			direction := repository_models.OrderDirectionTypeASC
+			repoFilter.OrderDirection = &direction
+		case usecase_models.OrderDirectionDESC:
+			direction := repository_models.OrderDirectionTypeDESC
+			repoFilter.OrderDirection = &direction
+		}
+	}
+
+	return repoFilter
 }
 
 func repoEventTypesDtoToUseCase(types []*repository_models.EventTypeRepositoryDTO) usecase_models.EventTypes {

@@ -32,6 +32,7 @@ func (l OrderByList) Join() (strList []string) {
 const (
 	OrderByTypeCreatedAt OrderBy = "created_at"
 	OrderByTypeTitle     OrderBy = "title"
+	OrderByTypeID        OrderBy = "id"
 )
 
 type OrderDirection string

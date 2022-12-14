@@ -25,6 +25,7 @@ message EventType {
 enum OrderBy {
   TITLE = 0;
   CREATED_AT = 1;
+  ID = 2;
 }
 enum OrderDirection {
   EMPTY = 0;

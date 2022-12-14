@@ -1,7 +1,6 @@
 package usecase_models
 
 import (
-	"event_service/internal/event/repositories/repository_models"
 	"time"
 )
 
@@ -16,13 +15,28 @@ type CreateEventTypeInput struct {
 }
 
 type EventTypeFilter struct {
-	Titles         []string                          `json:"titles"`
-	Search         *string                           `json:"search"`
-	OrderBy        repository_models.OrderByList     `json:"order_by"`
-	OrderDirection *repository_models.OrderDirection `json:"order_direction"`
-	PageSize       *uint64                           `json:"page_size"`
-	PageNumber     *uint64                           `json:"page_number"`
+	Titles         []string        `json:"titles"`
+	Search         *string         `json:"search"`
+	OrderBy        []OrderBy       `json:"order_by"`
+	OrderDirection *OrderDirection `json:"order_direction"`
+	PageSize       *uint64         `json:"page_size"`
+	PageNumber     *uint64         `json:"page_number"`
 }
+
+type OrderBy string
+
+const (
+	OrderByTypeCreatedAt OrderBy = "created_at"
+	OrderByTypeTitle     OrderBy = "title"
+	OrderByTypeID        OrderBy = "id"
+)
+
+type OrderDirection string
+
+const (
+	OrderDirectionASC  OrderDirection = "asc"
+	OrderDirectionDESC OrderDirection = "desc"
+)
 
 type EventTypes []*EventType
 
