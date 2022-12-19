@@ -99,15 +99,15 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 		useCaseFilter.OrderBy = grpcOrderByToUseCase(grpcFilter.OrderBy)
 	}
 
-	if grpcFilter.OrderDirection != event_type_proto.OrderDirection_EMPTY {
+	if grpcFilter.OrderDirection != event_type_proto.EventTypeSortOrder_EMPTY {
 
 		var direction usecase_models.OrderDirection
 
 		switch grpcFilter.OrderDirection {
-		case event_type_proto.OrderDirection_ASC:
+		case event_type_proto.EventTypeSortOrder_ASC:
 			direction = usecase_models.OrderDirectionASC
 			useCaseFilter.OrderDirection = &direction
-		case event_type_proto.OrderDirection_DESC:
+		case event_type_proto.EventTypeSortOrder_DESC:
 			direction = usecase_models.OrderDirectionDESC
 			useCaseFilter.OrderDirection = &direction
 		}
@@ -123,14 +123,14 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 	return useCaseFilter
 }
 
-func grpcOrderByToUseCase(orderBy []event_type_proto.OrderBy) (orderByList []usecase_models.OrderBy) {
+func grpcOrderByToUseCase(orderBy []event_type_proto.EventTypeSortBy) (orderByList []usecase_models.OrderBy) {
 	for _, item := range orderBy {
 		switch item {
-		case event_type_proto.OrderBy_TITLE:
+		case event_type_proto.EventTypeSortBy_TITLE:
 			orderByList = append(orderByList, usecase_models.OrderByTypeTitle)
-		case event_type_proto.OrderBy_CREATED_AT:
+		case event_type_proto.EventTypeSortBy_CREATED_AT:
 			orderByList = append(orderByList, usecase_models.OrderByTypeCreatedAt)
-		case event_type_proto.OrderBy_ID:
+		case event_type_proto.EventTypeSortBy_ID:
 			orderByList = append(orderByList, usecase_models.OrderByTypeID)
 		}
 	}

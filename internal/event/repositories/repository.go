@@ -5,7 +5,6 @@ import (
 	"event_service/internal/event/repositories/mongo_store"
 	"event_service/internal/event/repositories/pg_store"
 	"event_service/internal/event/repositories/repository_models"
-	"event_service/internal/event/usecases/usecase_models"
 	"github.com/jmoiron/sqlx"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -30,7 +29,7 @@ type IEventTypeRepository interface {
 }
 
 type IEventRepository interface {
-	Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error)
+	Create(ctx context.Context, createEvent *repository_models.CreateEventRepositoryDTO) (*repository_models.EventRepositoryDTO, error)
 }
 
 type Repository struct {

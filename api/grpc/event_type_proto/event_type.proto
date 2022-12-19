@@ -22,12 +22,12 @@ message EventType {
   google.protobuf.Timestamp updated_at = 3;
 }
 
-enum OrderBy {
+enum EventTypeSortBy {
   TITLE = 0;
   CREATED_AT = 1;
   ID = 2;
 }
-enum OrderDirection {
+enum EventTypeSortOrder {
   EMPTY = 0;
   ASC = 1;
   DESC = 2;
@@ -35,8 +35,8 @@ enum OrderDirection {
 message EventTypeFilter {
   repeated string titles = 1;
   google.protobuf.StringValue search = 2;
-  repeated OrderBy order_by = 3;
-  OrderDirection order_direction = 4;
+  repeated EventTypeSortBy order_by = 3;
+  EventTypeSortOrder order_direction = 4;
   google.protobuf.UInt64Value page_size = 5;
   google.protobuf.UInt64Value page_number = 6;
 }

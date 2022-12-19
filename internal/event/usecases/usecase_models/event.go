@@ -3,17 +3,25 @@ package usecase_models
 import "time"
 
 type Event struct {
-	ID           int64     `db:"id"`
-	TypeID       int64     `db:"type_id"`
-	CampaignID   int64     `db:"campaign_id"`
-	CostAmount   uint64    `db:"cost_amount"`
-	CostCurrency string    `db:"cost_currency"`
-	CreatedAt    time.Time `db:"created_at"`
+	ID           int64     `json:"id"`
+	TypeID       string    `json:"type_id"`
+	CampaignID   int64     `json:"campaign_id"`
+	InsertionID  int64     `json:"insertion_id"`
+	UserID       int64     `json:"user_id"`
+	CostAmount   uint64    `json:"cost_amount"`
+	CostCurrency string    `json:"cost_currency"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type CreateEventInput struct {
-	TypeID       int64  `db:"type_id"`
-	CampaignID   int64  `db:"campaign_id"`
-	CostAmount   uint64 `db:"cost_amount"`
-	CostCurrency string `db:"cost_currency"`
+	TypeID      string `json:"type_id"`
+	CampaignID  int64  `json:"campaign_id"`
+	InsertionID int64  `json:"insertion_id"`
+	UserID      int64  `json:"user_id"`
+	Cost        *Cost  `json:"cost"`
+}
+
+type Cost struct {
+	Amount   uint64 `json:"amount"`
+	Currency string `json:"currency"`
 }
