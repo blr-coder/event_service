@@ -3,6 +3,8 @@ package pg_store
 import (
 	"context"
 	"event_service/internal/event/repositories/repository_models"
+	"github.com/pkg/errors"
+
 	// DB driver
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -20,5 +22,27 @@ func (s *EventPsqlStore) Create(
 	ctx context.Context, createEvent *repository_models.CreateEventRepositoryDTO,
 ) (*repository_models.EventRepositoryDTO, error) {
 
-	return nil, nil
+	query := `
+		INSERT INTO events 
+		    (type_title, campaign_id, insertion_id, user_id, cost_amount, cost_currency)
+		VALUES 
+		    ($1, $2, $3, $4, $5, $6)
+		RETURNING *
+`
+
+	event := &repository_models.EventRepositoryDTO{}
+
+	return event, errors.WithStack(
+		s.db.GetContext(
+			ctx,
+			event,
+			query,
+			createEvent.TypeTitle,
+			createEvent.CampaignID,
+			createEvent.InsertionID,
+			createEvent.UserID,
+			createEvent.CostAmount,
+			createEvent.CostCurrency,
+		),
+	)
 }

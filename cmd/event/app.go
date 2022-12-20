@@ -32,7 +32,7 @@ func runEventApp() (err error) {
 	repo := repositories.NewPsqlRepository(db)
 	useCase := usecases.NewUseCase(repo)
 
-	eventServer := eventgrpc.NewEventServiceServer()
+	eventServer := eventgrpc.NewEventServiceServer(useCase)
 	eventTypeServer := eventgrpc.NewEventTypeServiceServer(useCase)
 
 	grpcServer := eventgrpc.NewGRPCServer(eventServer, eventTypeServer)

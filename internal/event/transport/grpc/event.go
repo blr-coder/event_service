@@ -44,7 +44,7 @@ func (s *EventServiceServer) List(
 
 func grpcCreateEventToUseCaseInput(grpcCreateEvent *event_proto.CreateEventRequest) *usecase_models.CreateEventInput {
 	return &usecase_models.CreateEventInput{
-		TypeID:      grpcCreateEvent.GetTypeId(),
+		TypeTitle:   grpcCreateEvent.GetTypeTitle(),
 		CampaignID:  grpcCreateEvent.GetCampaignId(),
 		InsertionID: grpcCreateEvent.GetInsertionId(),
 		UserID:      grpcCreateEvent.GetUserId(),
@@ -62,7 +62,7 @@ func useCaseEventToGRPC(ucEvent *usecase_models.Event) *event_proto.Event {
 		InsertionId: ucEvent.InsertionID,
 		UserId:      ucEvent.UserID,
 		CreatedAt:   timestamppb.New(ucEvent.CreatedAt),
-		TypeId:      ucEvent.TypeID,
+		TypeTitle:   ucEvent.TypeTitle,
 		Cost: &event_proto.Cost{
 			Amount:   int64(ucEvent.CostAmount),
 			Currency: ucEvent.CostCurrency,

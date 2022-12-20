@@ -3,7 +3,7 @@ package repository_models
 import "time"
 
 type CreateEventRepositoryDTO struct {
-	TypeID       string `db:"type_id"`
+	TypeTitle    string `db:"type_title"`
 	CampaignID   int64  `db:"campaign_id"`
 	InsertionID  int64  `db:"insertion_id"`
 	UserID       int64  `db:"user_id"`
@@ -13,7 +13,7 @@ type CreateEventRepositoryDTO struct {
 
 type EventRepositoryDTO struct {
 	ID           int64     `db:"id"`
-	TypeID       string    `db:"type_id"`
+	TypeTitle    string    `db:"type_title"`
 	CampaignID   int64     `db:"campaign_id"`
 	InsertionID  int64     `db:"insertion_id"`
 	UserID       int64     `db:"user_id"`

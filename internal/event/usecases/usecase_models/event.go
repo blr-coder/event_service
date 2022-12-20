@@ -4,7 +4,7 @@ import "time"
 
 type Event struct {
 	ID           int64     `json:"id"`
-	TypeID       string    `json:"type_id"`
+	TypeTitle    string    `json:"type_title"`
 	CampaignID   int64     `json:"campaign_id"`
 	InsertionID  int64     `json:"insertion_id"`
 	UserID       int64     `json:"user_id"`
@@ -14,7 +14,7 @@ type Event struct {
 }
 
 type CreateEventInput struct {
-	TypeID      string `json:"type_id"`
+	TypeTitle   string `json:"type_title"`
 	CampaignID  int64  `json:"campaign_id"`
 	InsertionID int64  `json:"insertion_id"`
 	UserID      int64  `json:"user_id"`

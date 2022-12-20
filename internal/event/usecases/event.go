@@ -28,7 +28,7 @@ func (c *EventUseCase) Create(ctx context.Context, createEvent *usecase_models.C
 
 func useCaseCreateEventDtoToRepo(createEventUC *usecase_models.CreateEventInput) *repository_models.CreateEventRepositoryDTO {
 	return &repository_models.CreateEventRepositoryDTO{
-		TypeID:       createEventUC.TypeID,
+		TypeTitle:    createEventUC.TypeTitle,
 		CampaignID:   createEventUC.CampaignID,
 		InsertionID:  createEventUC.InsertionID,
 		UserID:       createEventUC.UserID,
@@ -40,7 +40,7 @@ func useCaseCreateEventDtoToRepo(createEventUC *usecase_models.CreateEventInput)
 func repoEventDtoToUseCase(repoEvent *repository_models.EventRepositoryDTO) *usecase_models.Event {
 	return &usecase_models.Event{
 		ID:           repoEvent.ID,
-		TypeID:       repoEvent.TypeID,
+		TypeTitle:    repoEvent.TypeTitle,
 		CampaignID:   repoEvent.CampaignID,
 		InsertionID:  repoEvent.InsertionID,
 		UserID:       repoEvent.UserID,
