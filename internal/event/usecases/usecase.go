@@ -13,6 +13,8 @@ type IEventTypeUseCase interface {
 	Delete(ctx context.Context, deleteEventType *usecase_models.DeleteEventTypeInput) error
 }
 
+//go:generate mockgen -build_flags=-mod=mod -destination mock/event_mock.go event_service/internal/event/usecases IEventUseCase
+
 type IEventUseCase interface {
 	Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error)
 }
