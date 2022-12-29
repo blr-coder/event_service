@@ -18,3 +18,8 @@ func (s *EventMongoStore) Create(ctx context.Context, createEvent *repository_mo
 
 	return nil, nil
 }
+
+func (s *EventMongoStore) List(ctx context.Context, filter *repository_models.EventRepositoryFilter) ([]*repository_models.EventRepositoryDTO, uint64, error) {
+
+	return nil, 0, nil
+}

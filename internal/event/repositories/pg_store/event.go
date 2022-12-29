@@ -46,3 +46,8 @@ func (s *EventPsqlStore) Create(
 		),
 	)
 }
+
+func (s *EventPsqlStore) List(ctx context.Context, filter *repository_models.EventRepositoryFilter) ([]*repository_models.EventRepositoryDTO, uint64, error) {
+
+	return nil, 0, nil
+}

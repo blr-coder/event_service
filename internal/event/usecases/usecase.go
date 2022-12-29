@@ -17,6 +17,7 @@ type IEventTypeUseCase interface {
 
 type IEventUseCase interface {
 	Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error)
+	List(ctx context.Context, filter *usecase_models.EventFilter) (*usecase_models.Events, error)
 }
 
 type UseCase struct {

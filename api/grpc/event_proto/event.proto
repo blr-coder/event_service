@@ -38,8 +38,8 @@ message ListEventFilter {
   google.protobuf.Int64Value campaign_id = 2;
   google.protobuf.Int64Value insertion_id = 3;
   google.protobuf.Int64Value user_id = 4;
-  repeated EventSortBy order_by = 5;
-  EventSortOrder order_direction = 6;
+  repeated EventSortBy sort_by = 5;
+  EventSortOrder sort_order = 6;
   google.protobuf.UInt64Value page_size = 7;
   google.protobuf.UInt64Value page_number = 8;
 }
@@ -54,4 +54,5 @@ message Event {
 }
 message Events {
   repeated Event events = 1;
+  uint64 count = 2;
 }

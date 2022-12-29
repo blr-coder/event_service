@@ -30,6 +30,7 @@ type IEventTypeRepository interface {
 
 type IEventRepository interface {
 	Create(ctx context.Context, createEvent *repository_models.CreateEventRepositoryDTO) (*repository_models.EventRepositoryDTO, error)
+	List(ctx context.Context, repositoryFilter *repository_models.EventRepositoryFilter) ([]*repository_models.EventRepositoryDTO, uint64, error)
 }
 
 type Repository struct {

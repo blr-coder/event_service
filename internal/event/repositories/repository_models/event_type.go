@@ -35,24 +35,13 @@ const (
 	OrderByTypeID        OrderBy = "id"
 )
 
-type OrderDirection string
-
-func (d OrderDirection) String() string {
-	return string(d)
-}
-
-const (
-	OrderDirectionTypeASC  OrderDirection = "ASC"
-	OrderDirectionTypeDESC OrderDirection = "DESC"
-)
-
 type EventTypeRepositoryFilter struct {
-	Titles         []string        `db:"titles"`
-	Search         *string         `db:"search"`
-	OrderBy        OrderByList     `db:"order_by"`
-	OrderDirection *OrderDirection `db:"order_direction"`
-	PageSize       *uint64         `db:"page_size"`
-	PageNumber     *uint64         `db:"page_number"`
+	Titles     []string    `db:"titles"`
+	Search     *string     `db:"search"`
+	OrderBy    OrderByList `db:"order_by"`
+	SortOrder  *SortOrder  `db:"sort_order"`
+	PageSize   *uint64     `db:"page_size"`
+	PageNumber *uint64     `db:"page_number"`
 }
 
 type UpdateEventTypeRepositoryDTO struct {

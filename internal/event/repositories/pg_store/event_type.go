@@ -137,8 +137,8 @@ func (s *EventTypePsqlStore) decodeRepositoryFilter(
 	if filter.OrderBy != nil && paginate {
 		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(filter.OrderBy.Join(), ",")))
 	}
-	if filter.OrderDirection != nil && filter.OrderBy != nil && paginate {
-		query = fmt.Sprintf("%s %s", query, filter.OrderDirection)
+	if filter.SortOrder != nil && filter.OrderBy != nil && paginate {
+		query = fmt.Sprintf("%s %s", query, filter.SortOrder)
 	}
 
 	if paginate && filter.PageSize != nil && filter.PageNumber != nil {

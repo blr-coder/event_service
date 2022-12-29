@@ -25,3 +25,29 @@ type Cost struct {
 	Amount   uint64 `json:"amount"`
 	Currency string `json:"currency"`
 }
+
+type EventFilter struct {
+	TypeTitle    *string       `json:"type_title"`
+	CampaignID   *int64        `json:"campaign_id"`
+	InsertionID  *int64        `json:"insertion_id"`
+	UserID       *int64        `json:"user_id"`
+	CostCurrency *string       `json:"cost_currency"`
+	SortBy       []EventSortBy `json:"sort_by"`
+	SortOrder    *SortOrder    `json:"sort_order"`
+	PageSize     *uint64       `json:"page_size"`
+	PageNumber   *uint64       `json:"page_number"`
+}
+
+type EventSortBy string
+
+const (
+	EventSortByCreatedAt    EventSortBy = "created_at"
+	EventSortByTypeTitle    EventSortBy = "type_title"
+	EventSortByID           EventSortBy = "id"
+	EventSortByCostCurrency EventSortBy = "cost_currency"
+)
+
+type Events struct {
+	Events []Event
+	Count  uint64
+}

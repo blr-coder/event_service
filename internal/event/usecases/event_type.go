@@ -92,11 +92,11 @@ func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repos
 	if filter.OrderDirection != nil {
 		switch *filter.OrderDirection {
 		case usecase_models.OrderDirectionASC:
-			direction := repository_models.OrderDirectionTypeASC
-			repoFilter.OrderDirection = &direction
+			direction := repository_models.SortOrderASC
+			repoFilter.SortOrder = &direction
 		case usecase_models.OrderDirectionDESC:
-			direction := repository_models.OrderDirectionTypeDESC
-			repoFilter.OrderDirection = &direction
+			direction := repository_models.SortOrderDESC
+			repoFilter.SortOrder = &direction
 		}
 	}
 
