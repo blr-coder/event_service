@@ -24,7 +24,7 @@ func (s *EventServiceServer) Create(
 	grpcRequest *event_proto.CreateEventRequest,
 ) (*event_proto.Event, error) {
 
-	event, err := s.useCase.Event.Create(ctx, grpcCreateEventToUseCaseInput(grpcRequest))
+	event, err := s.useCase.Event.Create(ctx, grpcCreateEventToUCInput(grpcRequest))
 	if err != nil {
 		// TODO: Add decodeError func
 		return nil, err
@@ -38,11 +38,79 @@ func (s *EventServiceServer) List(
 	grpcFilter *event_proto.ListEventFilter,
 ) (*event_proto.Events, error) {
 
-	//TODO implement me
-	panic("implement me List")
+	ucEventsList, err := s.useCase.Event.List(ctx, grpcEventFilterToUCFilter(grpcFilter))
+	if err != nil {
+		return nil, err
+	}
+
+	return ucEventsListToGrpc(ucEventsList), nil
 }
 
-func grpcCreateEventToUseCaseInput(grpcCreateEvent *event_proto.CreateEventRequest) *usecase_models.CreateEventInput {
+func ucEventsListToGrpc(eventsWithCount *usecase_models.Events) *event_proto.Events {
+	grpcEvents := &event_proto.Events{
+		Count:  eventsWithCount.Count,
+		Events: make([]*event_proto.Event, 0, len(eventsWithCount.Events)),
+	}
+
+	for _, e := range eventsWithCount.Events {
+		grpcEvents.Events = append(grpcEvents.Events, useCaseEventToGRPC(e))
+	}
+
+	return grpcEvents
+}
+
+func grpcEventFilterToUCFilter(grpcFilter *event_proto.ListEventFilter) *usecase_models.EventFilter {
+
+	ucFilter := &usecase_models.EventFilter{}
+
+	if grpcFilter.TypeTitle != nil {
+		ucFilter.TypeTitle = &grpcFilter.TypeTitle.Value
+	}
+	if grpcFilter.CampaignId != nil {
+		ucFilter.CampaignID = &grpcFilter.CampaignId.Value
+	}
+	if grpcFilter.InsertionId != nil {
+		ucFilter.InsertionID = &grpcFilter.InsertionId.Value
+	}
+	if grpcFilter.UserId != nil {
+		ucFilter.UserID = &grpcFilter.UserId.Value
+	}
+	if grpcFilter.SortBy != nil {
+		ucFilter.SortBy = grpcEventSortByToUc(grpcFilter.SortBy)
+	}
+	if grpcFilter.SortOrder != 0 {
+		order := usecase_models.SortOrderDESC
+		ucFilter.SortOrder = &order
+	}
+
+	if grpcFilter.PageSize != nil {
+		ucFilter.PageSize = &grpcFilter.PageSize.Value
+	}
+	if grpcFilter.PageNumber != nil {
+		ucFilter.PageNumber = &grpcFilter.PageNumber.Value
+	}
+
+	return ucFilter
+}
+
+func grpcEventSortByToUc(sortBy []event_proto.EventSortBy) (sortByList []usecase_models.EventSortBy) {
+	for _, item := range sortBy {
+		switch item {
+		case event_proto.EventSortBy_CREATED_AT:
+			sortByList = append(sortByList, usecase_models.EventSortByCreatedAt)
+		case event_proto.EventSortBy_TYPE_TITLE:
+			sortByList = append(sortByList, usecase_models.EventSortByTypeTitle)
+		case event_proto.EventSortBy_ID:
+			sortByList = append(sortByList, usecase_models.EventSortByID)
+		case event_proto.EventSortBy_COST_CURRENCY:
+			sortByList = append(sortByList, usecase_models.EventSortByCostCurrency)
+		}
+	}
+
+	return sortByList
+}
+
+func grpcCreateEventToUCInput(grpcCreateEvent *event_proto.CreateEventRequest) *usecase_models.CreateEventInput {
 	return &usecase_models.CreateEventInput{
 		TypeTitle:   grpcCreateEvent.GetTypeTitle(),
 		CampaignID:  grpcCreateEvent.GetCampaignId(),

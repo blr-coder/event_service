@@ -39,10 +39,14 @@ func (c *EventUseCase) List(ctx context.Context, filter *usecase_models.EventFil
 
 func repoEventsToUseCase(repoEvents []*repository_models.EventRepositoryDTO, repoCount uint64) *usecase_models.Events {
 
-	// TODO: Add loop
+	events := make([]*usecase_models.Event, 0, len(repoEvents))
+
+	for _, e := range repoEvents {
+		events = append(events, repoEventDtoToUseCase(e))
+	}
 
 	return &usecase_models.Events{
-		Events: nil,
+		Events: events,
 		Count:  repoCount,
 	}
 }

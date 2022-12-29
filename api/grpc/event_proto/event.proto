@@ -24,10 +24,10 @@ message Cost {
 }
 
 enum EventSortBy {
-  TYPE_ID = 0;
-  CAMPAIGN_ID = 1;
-  INSERTION_ID = 2;
-  USER_ID = 3;
+  TYPE_TITLE = 0;
+  CREATED_AT = 1;
+  ID = 2;
+  COST_CURRENCY = 3;
 }
 enum EventSortOrder {
   ASC = 0;

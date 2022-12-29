@@ -48,6 +48,6 @@ const (
 )
 
 type Events struct {
-	Events []Event
+	Events []*Event
 	Count  uint64
 }
