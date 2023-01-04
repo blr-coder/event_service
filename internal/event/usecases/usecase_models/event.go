@@ -1,6 +1,7 @@
 package usecase_models
 
 import (
+	"event_service/internal/event/usecases/usecase_errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"time"
 )
@@ -28,9 +29,11 @@ func (i *CreateEventInput) Validate() error {
 	err := validation.ValidateStruct(
 		i,
 		validation.Field(&i.TypeTitle, validation.Required),
+		validation.Field(&i.Cost, validation.Required),
 	)
 	if err != nil {
-		return err
+		// TODO: Is it good solution?
+		return usecase_errors.NewValidationErr(err)
 	}
 
 	return nil

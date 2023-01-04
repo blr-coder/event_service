@@ -5,6 +5,7 @@ import (
 	"event_service/internal/event/repositories"
 	"event_service/internal/event/repositories/mock"
 	"event_service/internal/event/repositories/repository_models"
+	"event_service/internal/event/usecases/usecase_errors"
 	"event_service/internal/event/usecases/usecase_models"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
@@ -36,7 +37,7 @@ func TestEvents(t *testing.T) {
 	suite.Run(t, new(EventTestsSuite))
 }
 
-func (ts *EventTestsSuite) TestCreate() {
+func (ts *EventTestsSuite) TestCreateOK() {
 	defer ts.clear()
 	ctx := context.Background()
 	newRepoEvent := mock_repositories.NewRepoEvent(ts.T())
@@ -91,8 +92,34 @@ func (ts *EventTestsSuite) TestCreate() {
 			},
 			wantErr: nil,
 		},
-		/*{
-			name: "TYPE TITLE IS EMPTY",
+	}
+
+	for _, tt := range tests {
+		ts.Run(tt.name, func() {
+			actual, err := ts.eventUseCase.Create(tt.args.ctx, tt.args.create)
+			ts.Require().Equal(tt.wantErr, err)
+			ts.Require().Equal(tt.want, actual)
+		})
+	}
+}
+
+func (ts *EventTestsSuite) TestCreateValidateError() {
+	defer ts.clear()
+	ctx := context.Background()
+	newRepoEvent := mock_repositories.NewRepoEvent(ts.T())
+
+	type args struct {
+		ctx    context.Context
+		create *usecase_models.CreateEventInput
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *usecase_models.Event
+		wantErr error
+	}{
+		{
+			name: "EMPTY TYPE TITLE",
 			args: args{
 				ctx: ctx,
 				create: &usecase_models.CreateEventInput{
@@ -105,9 +132,28 @@ func (ts *EventTestsSuite) TestCreate() {
 					},
 				},
 			},
-			want:    nil,
-			wantErr: nil, // Special error
-		},*/
+			want: nil,
+			wantErr: &usecase_errors.ValidationErr{
+				ErrMessage: "type_title: cannot be blank.",
+			},
+		},
+		{
+			name: "EMPTY COST",
+			args: args{
+				ctx: ctx,
+				create: &usecase_models.CreateEventInput{
+					TypeTitle:   newRepoEvent.TypeTitle,
+					CampaignID:  newRepoEvent.CampaignID,
+					InsertionID: newRepoEvent.InsertionID,
+					UserID:      newRepoEvent.UserID,
+					Cost:        nil,
+				},
+			},
+			want: nil,
+			wantErr: &usecase_errors.ValidationErr{
+				ErrMessage: "cost: cannot be blank.",
+			},
+		},
 	}
 
 	for _, tt := range tests {
