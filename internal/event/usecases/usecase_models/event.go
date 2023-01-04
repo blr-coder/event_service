@@ -1,6 +1,9 @@
 package usecase_models
 
-import "time"
+import (
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"time"
+)
 
 type Event struct {
 	ID           int64     `json:"id"`
@@ -19,6 +22,18 @@ type CreateEventInput struct {
 	InsertionID int64  `json:"insertion_id"`
 	UserID      int64  `json:"user_id"`
 	Cost        *Cost  `json:"cost"`
+}
+
+func (i *CreateEventInput) Validate() error {
+	err := validation.ValidateStruct(
+		i,
+		validation.Field(&i.TypeTitle, validation.Required),
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type Cost struct {

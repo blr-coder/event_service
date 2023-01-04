@@ -16,7 +16,10 @@ func NewEventUseCase(repo *repositories.Repository) *EventUseCase {
 }
 
 func (c *EventUseCase) Create(ctx context.Context, createEvent *usecase_models.CreateEventInput) (*usecase_models.Event, error) {
-	// TODO: Validate
+	if err := createEvent.Validate(); err != nil {
+		// TODO: add good errors handling
+		return nil, err
+	}
 
 	event, err := c.repository.Event.Create(ctx, useCaseCreateEventDtoToRepo(createEvent))
 	if err != nil {

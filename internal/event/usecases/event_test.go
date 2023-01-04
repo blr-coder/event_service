@@ -4,11 +4,11 @@ import (
 	"context"
 	"event_service/internal/event/repositories"
 	"event_service/internal/event/repositories/mock"
+	"event_service/internal/event/repositories/repository_models"
 	"event_service/internal/event/usecases/usecase_models"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 	"testing"
-	"time"
 )
 
 // EventTestsSuite - набор тестов для событий :)
@@ -39,6 +39,20 @@ func TestEvents(t *testing.T) {
 func (ts *EventTestsSuite) TestCreate() {
 	defer ts.clear()
 	ctx := context.Background()
+	newRepoEvent := mock_repositories.NewRepoEvent(ts.T())
+
+	ts.mockIEventRepository.
+		EXPECT().
+		Create(ctx, &repository_models.CreateEventRepositoryDTO{
+			TypeTitle:    newRepoEvent.TypeTitle,
+			CampaignID:   newRepoEvent.CampaignID,
+			InsertionID:  newRepoEvent.InsertionID,
+			UserID:       newRepoEvent.UserID,
+			CostAmount:   newRepoEvent.CostAmount,
+			CostCurrency: newRepoEvent.CostCurrency,
+		}).
+		Return(newRepoEvent, nil).
+		Times(1)
 
 	type args struct {
 		ctx    context.Context
@@ -51,29 +65,49 @@ func (ts *EventTestsSuite) TestCreate() {
 		wantErr error
 	}{
 		{
-			name: "first_OK",
+			name: "OK",
 			args: args{
 				ctx: ctx,
 				create: &usecase_models.CreateEventInput{
-					TypeTitle:   "",
-					CampaignID:  0,
-					InsertionID: 0,
-					UserID:      0,
-					Cost:        nil,
+					TypeTitle:   newRepoEvent.TypeTitle,
+					CampaignID:  newRepoEvent.CampaignID,
+					InsertionID: newRepoEvent.InsertionID,
+					UserID:      newRepoEvent.UserID,
+					Cost: &usecase_models.Cost{
+						Amount:   newRepoEvent.CostAmount,
+						Currency: newRepoEvent.CostCurrency,
+					},
 				},
 			},
 			want: &usecase_models.Event{
-				ID:           0,
-				TypeTitle:    "",
-				CampaignID:   0,
-				InsertionID:  0,
-				UserID:       0,
-				CostAmount:   0,
-				CostCurrency: "",
-				CreatedAt:    time.Time{},
+				ID:           newRepoEvent.ID,
+				TypeTitle:    newRepoEvent.TypeTitle,
+				CampaignID:   newRepoEvent.CampaignID,
+				InsertionID:  newRepoEvent.InsertionID,
+				UserID:       newRepoEvent.UserID,
+				CostAmount:   newRepoEvent.CostAmount,
+				CostCurrency: newRepoEvent.CostCurrency,
+				CreatedAt:    newRepoEvent.CreatedAt,
 			},
 			wantErr: nil,
 		},
+		/*{
+			name: "TYPE TITLE IS EMPTY",
+			args: args{
+				ctx: ctx,
+				create: &usecase_models.CreateEventInput{
+					CampaignID:  newRepoEvent.CampaignID,
+					InsertionID: newRepoEvent.InsertionID,
+					UserID:      newRepoEvent.UserID,
+					Cost: &usecase_models.Cost{
+						Amount:   newRepoEvent.CostAmount,
+						Currency: newRepoEvent.CostCurrency,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: nil, // Special error
+		},*/
 	}
 
 	for _, tt := range tests {
