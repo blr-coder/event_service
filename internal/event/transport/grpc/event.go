@@ -75,6 +75,9 @@ func grpcEventFilterToUCFilter(grpcFilter *event_proto.ListEventFilter) *usecase
 	if grpcFilter.UserId != nil {
 		ucFilter.UserID = &grpcFilter.UserId.Value
 	}
+	if grpcFilter.CostCurrency != nil {
+		ucFilter.CostCurrency = &grpcFilter.CostCurrency.Value
+	}
 	if grpcFilter.SortBy != nil {
 		ucFilter.SortBy = grpcEventSortByToUc(grpcFilter.SortBy)
 	}

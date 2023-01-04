@@ -5,6 +5,7 @@ import (
 	"event_service/internal/event/repositories/repository_models"
 	"fmt"
 	"github.com/pkg/errors"
+	"strings"
 
 	// DB driver
 	"github.com/jmoiron/sqlx"
@@ -85,10 +86,28 @@ func (s *EventPsqlStore) decodeRepositoryFilter(
 		query = fmt.Sprintf("%s AND type_title =(?)", query)
 		args = append(args, filter.TypeTitle)
 	}
-
 	if filter.CampaignID != nil {
 		query = fmt.Sprintf("%s AND campaign_id =(?)", query)
 		args = append(args, filter.CampaignID)
+	}
+	if filter.InsertionID != nil {
+		query = fmt.Sprintf("%s AND insertion_id =(?)", query)
+		args = append(args, filter.InsertionID)
+	}
+	if filter.UserID != nil {
+		query = fmt.Sprintf("%s AND user_id =(?)", query)
+		args = append(args, filter.UserID)
+	}
+	if filter.CostCurrency != nil {
+		query = fmt.Sprintf("%s AND cost_currency =(?)", query)
+		args = append(args, filter.CostCurrency)
+	}
+
+	if filter.SortBy != nil && paginate {
+		query = fmt.Sprintf("%s %s", query, fmt.Sprintf("ORDER BY (%s)", strings.Join(filter.SortBy.Join(), ",")))
+	}
+	if filter.SortOrder != nil && filter.SortBy != nil && paginate {
+		query = fmt.Sprintf("%s %s", query, filter.SortOrder)
 	}
 
 	// TODO: Add other fields check

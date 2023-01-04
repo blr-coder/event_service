@@ -28,6 +28,8 @@ type IEventTypeRepository interface {
 	) error
 }
 
+//go:generate mockgen -build_flags=-mod=mod -destination mock/event_mock.go event_service/internal/event/repositories IEventRepository
+
 type IEventRepository interface {
 	Create(ctx context.Context, createEvent *repository_models.CreateEventRepositoryDTO) (*repository_models.EventRepositoryDTO, error)
 	List(ctx context.Context, repositoryFilter *repository_models.EventRepositoryFilter) ([]*repository_models.EventRepositoryDTO, uint64, error)

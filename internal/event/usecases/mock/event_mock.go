@@ -49,3 +49,18 @@ func (mr *MockIEventUseCaseMockRecorder) Create(arg0, arg1 interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIEventUseCase)(nil).Create), arg0, arg1)
 }
+
+// List mocks base method.
+func (m *MockIEventUseCase) List(arg0 context.Context, arg1 *usecase_models.EventFilter) (*usecase_models.Events, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", arg0, arg1)
+	ret0, _ := ret[0].(*usecase_models.Events)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockIEventUseCaseMockRecorder) List(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockIEventUseCase)(nil).List), arg0, arg1)
+}

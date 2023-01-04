@@ -42,6 +42,7 @@ message ListEventFilter {
   EventSortOrder sort_order = 6;
   google.protobuf.UInt64Value page_size = 7;
   google.protobuf.UInt64Value page_number = 8;
+  google.protobuf.StringValue cost_currency = 9;
 }
 message Event {
   int64 id = 1;
