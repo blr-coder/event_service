@@ -20,9 +20,14 @@ type IEventUseCase interface {
 	List(ctx context.Context, filter *usecase_models.EventFilter) (*usecase_models.Events, error)
 }
 
+type IReportUseCase interface {
+	List(ctx context.Context, filter *usecase_models.ReportFilter) (*usecase_models.Reports, error)
+}
+
 type UseCase struct {
 	EventType IEventTypeUseCase
 	Event     IEventUseCase
+	Report    IReportUseCase
 }
 
 func NewUseCase(repo *repositories.Repository) *UseCase {

@@ -11,19 +11,28 @@ service ReportService {
   rpc ListByFilter(ReportListFilter) returns (Reports);
 }
 
+enum REPORT_BY {
+  HOUR = 0;
+  DAY = 1;
+  WEEK = 2;
+  MONTH = 3;
+}
 message ReportListFilter {
   google.protobuf.Timestamp from = 1;
   google.protobuf.Timestamp to = 2;
+  REPORT_BY report_by_period = 3;
 }
 message Report {
-  int64 leads = 1;
-  int64 sign_ups = 2;
-  int64 calls = 3;
-  int64 impressions = 4;
-  int64 clicks = 5;
-  int64 views = 6;
-  int64 closes = 7;
+  google.protobuf.Timestamp date = 1;
+  string event_type = 2;
+  Cost cost = 3;
+  uint64 count = 4;
 }
 message Reports {
   repeated Report reports = 1;
+}
+
+message Cost {
+  int64 amount = 1;
+  string currency = 2;
 }

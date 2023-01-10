@@ -35,15 +35,21 @@ type IEventRepository interface {
 	List(ctx context.Context, repositoryFilter *repository_models.EventRepositoryFilter) ([]*repository_models.EventRepositoryDTO, uint64, error)
 }
 
+type IReportRepository interface {
+	List(ctx context.Context, repositoryFilter *repository_models.ReportRepositoryFilter) ([]*repository_models.Report, error)
+}
+
 type Repository struct {
 	EventType IEventTypeRepository
 	Event     IEventRepository
+	Report    IReportRepository
 }
 
 func NewPsqlRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		EventType: pg_store.NewEventTypePsqlStore(db),
 		Event:     pg_store.NewEventPsqlStore(db),
+		Report:    pg_store.NewReportPsqlStore(db),
 	}
 }
 
@@ -52,5 +58,6 @@ func NewMongoRepository(collection *mongo.Collection) *Repository {
 	return &Repository{
 		EventType: mongo_store.NewEventTypeMongoStore(collection),
 		Event:     mongo_store.NewEventMongoStore(collection),
+		//Report: .......
 	}
 }
