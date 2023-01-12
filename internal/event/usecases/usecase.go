@@ -34,5 +34,6 @@ func NewUseCase(repo *repositories.Repository) *UseCase {
 	return &UseCase{
 		EventType: NewEventTypeUseCase(repo),
 		Event:     NewEventUseCase(repo),
+		Report:    NewReportUseCase(repo),
 	}
 }

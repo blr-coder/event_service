@@ -34,8 +34,9 @@ func runEventApp() (err error) {
 
 	eventServer := eventgrpc.NewEventServiceServer(useCase)
 	eventTypeServer := eventgrpc.NewEventTypeServiceServer(useCase)
+	reportServer := eventgrpc.NewReportServiceServer(useCase)
 
-	grpcServer := eventgrpc.NewGRPCServer(eventServer, eventTypeServer)
+	grpcServer := eventgrpc.NewGRPCServer(eventServer, eventTypeServer, reportServer)
 	logrus.Info("init grpcServer... OK")
 
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", appConfig.AppPort))
