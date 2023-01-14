@@ -32,8 +32,9 @@ func (s *ReportServiceServer) ListByFilter(
 
 func decodeGrpcReportFilter(grpcReportFilter *report_proto.ReportListFilter) *usecase_models.ReportFilter {
 	return &usecase_models.ReportFilter{
-		From: grpcReportFilter.From.AsTime(),
-		To:   grpcReportFilter.To.AsTime(),
+		From:    grpcReportFilter.From.AsTime(),
+		To:      grpcReportFilter.To.AsTime(),
+		GroupBy: "", // TODO: Add mapping
 	}
 }
 
