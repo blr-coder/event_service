@@ -21,7 +21,7 @@ type IEventUseCase interface {
 }
 
 type IReportUseCase interface {
-	List(ctx context.Context, filter *usecase_models.ReportFilter) (*usecase_models.Reports, error)
+	List(ctx context.Context, filter *usecase_models.ReportFilter) (usecase_models.Reports, error)
 }
 
 type UseCase struct {

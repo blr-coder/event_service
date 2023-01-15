@@ -5,6 +5,7 @@ import (
 	"event_service/internal/event/repositories/repository_models"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type ReportPsqlStore struct {
@@ -17,25 +18,27 @@ func NewReportPsqlStore(db *sqlx.DB) *ReportPsqlStore {
 
 func (s *ReportPsqlStore) List(ctx context.Context, repositoryFilter *repository_models.ReportRepositoryFilter) (reports []*repository_models.Report, err error) {
 
-	var groupBy, where string
-
-	groupBy = "day"
-	where = "TRUE"
-
-	q := fmt.Sprintf(`SELECT type_title, count(type_title), sum(cost_amount), date_trunc('%s', created_at) AS date
-	FROM events
-	WHERE %s
-	GROUP BY type_title, date_trunc('%s', created_at)
-	ORDER BY date_trunc('%s', created_at)`, groupBy, where, groupBy, groupBy)
-
-	err = s.db.SelectContext(ctx, &reports, q)
+	err = s.db.SelectContext(ctx, &reports, s.repositoryFilterToQuery(repositoryFilter))
+	if err != nil {
+		return nil, err
+	}
 
 	return reports, nil
 }
 
-// TODO: Add decode func
+func (s *ReportPsqlStore) repositoryFilterToQuery(filter *repository_models.ReportRepositoryFilter) string {
 
-func (s *ReportPsqlStore) repositoryFilterToQuery(repositoryFilter *repository_models.ReportRepositoryFilter) (string, []any) {
+	query := fmt.Sprintf("SELECT type_title, count(type_title), sum(cost_amount), date_trunc('%s', created_at) AS date FROM events WHERE created_at >= '%s' AND created_at < '%s'", filter.GroupBy, filter.From.Format(time.RFC3339), filter.To.Format(time.RFC3339))
 
-	return "", nil
+	if filter.UserID != nil {
+		query = fmt.Sprintf("%s AND user_id = %d", query, *filter.UserID)
+	}
+
+	//TODO: Add check other fields
+
+	query = fmt.Sprintf("%s GROUP BY type_title, date_trunc('%s', events.created_at) ORDER BY date_trunc('%s', created_at)", query, filter.GroupBy, filter.GroupBy)
+
+	query = s.db.Rebind(query)
+
+	return query
 }
