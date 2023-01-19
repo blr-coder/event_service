@@ -25,3 +25,13 @@ func NewRepoEvent(t *testing.T) *repository_models.EventRepositoryDTO {
 		CreatedAt: f.Time().Time(time.Now()).UTC(),
 	}
 }
+
+/*func NewRepoEventList(t *testing.T) []*repository_models.EventRepositoryDTO {
+	t.Helper()
+	var eventList []*repository_models.EventRepositoryDTO
+	for i := 0; i < 10; i++ {
+		eventList = append(eventList, NewRepoEvent(t))
+	}
+
+	return eventList
+}*/
