@@ -168,26 +168,15 @@ func (ts *EventTestsSuite) TestCreateValidateError() {
 func (ts *EventTestsSuite) TestListOK() {
 	defer ts.clear()
 	ctx := context.Background()
-	var newRepoEventsList []*repository_models.EventRepositoryDTO
-	count := uint64(10)
-	newUcEventList := usecase_models.Events{
-		Events: nil,
-		Count:  count,
-	}
-	/*for _, eventRepositoryDTO := range newRepoEventsList {
-		newUcEventList.Events = append(newUcEventList.Events, repoEventDtoToUseCase(eventRepositoryDTO))
-	}*/
 
-	for i := 0; i < int(count); i++ {
-		repoEvent := mock_repositories.NewRepoEvent(ts.T())
-		newRepoEventsList = append(newRepoEventsList, repoEvent)
-		newUcEventList.Events = append(newUcEventList.Events, repoEventDtoToUseCase(repoEvent))
-	}
+	eventFilter := &usecase_models.EventFilter{}
+
+	repoEvents, repoCount := mock_repositories.NewRepoEventList(ts.T())
 
 	ts.mockIEventRepository.
 		EXPECT().
-		List(ctx, &repository_models.EventRepositoryFilter{}).
-		Return(newRepoEventsList, count, nil).
+		List(ctx, useCaseEventFilterToRepo(eventFilter)).
+		Return(repoEvents, repoCount, nil).
 		Times(1)
 
 	type args struct {
@@ -197,16 +186,16 @@ func (ts *EventTestsSuite) TestListOK() {
 	tests := []struct {
 		name    string
 		args    args
-		want    usecase_models.Events
+		want    *usecase_models.Events
 		wantErr error
 	}{
 		{
 			name: "OK",
 			args: args{
 				ctx:    ctx,
-				filter: &usecase_models.EventFilter{},
+				filter: eventFilter,
 			},
-			want:    newUcEventList,
+			want:    repoEventsToUseCase(repoEvents, repoCount),
 			wantErr: nil,
 		},
 	}
@@ -214,9 +203,11 @@ func (ts *EventTestsSuite) TestListOK() {
 	for _, tt := range tests {
 		ts.Run(tt.name, func() {
 			actual, err := ts.eventUseCase.List(tt.args.ctx, tt.args.filter)
+			ts.Require().Equal(tt.want, actual)
 			ts.Require().Equal(tt.wantErr, err)
-			//ts.Require().Equal(tt.want, actual)
-			ts.Assert().Equal(tt.want, actual)
+			// TODO: В чэм разница??? Какой юзать?
+			//ts.Assert().Equal(tt.wantErr, err)
+			//ts.Assert().Equal(tt.want, actual)
 		})
 	}
 }

@@ -26,12 +26,15 @@ func NewRepoEvent(t *testing.T) *repository_models.EventRepositoryDTO {
 	}
 }
 
-/*func NewRepoEventList(t *testing.T) []*repository_models.EventRepositoryDTO {
+func NewRepoEventList(t *testing.T) (events []*repository_models.EventRepositoryDTO, count uint64) {
 	t.Helper()
-	var eventList []*repository_models.EventRepositoryDTO
-	for i := 0; i < 10; i++ {
-		eventList = append(eventList, NewRepoEvent(t))
+
+	f := faker.New()
+
+	count = uint64(f.RandomDigit())
+	for i := 0; i < int(count); i++ {
+		events = append(events, NewRepoEvent(t))
 	}
 
-	return eventList
-}*/
+	return events, count
+}
