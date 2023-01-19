@@ -211,3 +211,47 @@ func (ts *EventTestsSuite) TestListOK() {
 		})
 	}
 }
+
+func (ts *EventTestsSuite) TestListRepoErr() {
+	defer ts.clear()
+	ctx := context.Background()
+
+	eventFilter := &usecase_models.EventFilter{}
+
+	ts.mockIEventRepository.
+		EXPECT().
+		List(ctx, useCaseEventFilterToRepo(eventFilter)).
+		Return(nil, uint64(0), usecase_errors.UnexpectedStoreError).
+		Times(1)
+
+	type args struct {
+		ctx    context.Context
+		filter *usecase_models.EventFilter
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *usecase_models.Events
+		wantErr error
+	}{
+		{
+			name: "STORE ERROR",
+			args: args{
+				ctx:    ctx,
+				filter: eventFilter,
+			},
+			want:    nil,
+			wantErr: usecase_errors.UnexpectedStoreError,
+		},
+	}
+
+	for _, tt := range tests {
+		ts.Run(tt.name, func() {
+			actual, err := ts.eventUseCase.List(tt.args.ctx, tt.args.filter)
+			ts.Require().Equal(tt.want, actual)
+			ts.Require().Equal(tt.wantErr, err)
+			ts.Require().NotEmpty(err)
+		})
+	}
+
+}
