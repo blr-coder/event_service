@@ -9,6 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+//go:generate mockgen -build_flags=-mod=mod -destination mock/event_type_mock.go event_service/internal/event/repositories IEventTypeRepository
+
 type IEventTypeRepository interface {
 	Create(
 		ctx context.Context,

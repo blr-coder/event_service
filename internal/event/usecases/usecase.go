@@ -6,6 +6,8 @@ import (
 	"event_service/internal/event/usecases/usecase_models"
 )
 
+//go:generate mockgen -build_flags=-mod=mod -destination mock/event_type_mock.go event_service/internal/event/usecases IEventTypeUseCase
+
 type IEventTypeUseCase interface {
 	Create(ctx context.Context, createEventType *usecase_models.CreateEventTypeInput) (*usecase_models.EventType, error)
 	List(ctx context.Context, filter *usecase_models.EventTypeFilter) (usecase_models.EventTypes, uint64, error)
