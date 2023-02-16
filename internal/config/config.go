@@ -9,6 +9,7 @@ import (
 type Config struct {
 	AppPort          string `yaml:"app_port"`
 	PostgresConnLink string `yaml:"postgres_conn_link"`
+	KafkaAddr        string `yaml:"kafka_addr"`
 }
 
 func NewConfig(configPath string) (*Config, error) {
