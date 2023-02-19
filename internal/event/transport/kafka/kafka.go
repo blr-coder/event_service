@@ -1,24 +1,28 @@
 package kafka
 
 import (
+	"context"
 	"encoding/json"
+	"event_service/internal/event/usecases"
+	"event_service/internal/event/usecases/usecase_models"
 	"github.com/Shopify/sarama"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/sirupsen/logrus"
 	"time"
 )
 
 type Handler struct {
 	kafkaClient sarama.Client
+	useCase     *usecases.UseCase
 }
 
-func New(client sarama.Client) *Handler {
+func New(client sarama.Client, useCase *usecases.UseCase) *Handler {
 	return &Handler{
 		kafkaClient: client,
+		useCase:     useCase,
 	}
 }
 
-func (h *Handler) Handle() error {
+func (h *Handler) Handle(ctx context.Context) error {
 
 	consumer, err := sarama.NewConsumerFromClient(h.kafkaClient)
 	if err != nil {
@@ -32,34 +36,35 @@ func (h *Handler) Handle() error {
 	topic := "quickstart"
 	partition := 0
 
-	partitionConsumer, err := consumer.ConsumePartition(topic, int32(partition), sarama.OffsetOldest)
+	partitionConsumer, err := consumer.ConsumePartition(topic, int32(partition), sarama.OffsetNewest)
 	if err != nil {
 		return err
 	}
 
 	i := 0
-	//var testEvent *usecase_models.CreateEventInput
-	var testEvent TestEventStructFromProducer
+	var createEvent *usecase_models.CreateEventInput
 	for ; ; i++ {
 		msg := <-partitionConsumer.Messages()
 
-		err = json.Unmarshal(msg.Value, &testEvent)
+		err = json.Unmarshal(msg.Value, &createEvent)
+		//TODO:  error handling
 		if err != nil {
-			panic(err)
+			return err
 		}
-		spew.Dump(testEvent)
+
+		event, err := h.useCase.Event.Create(ctx, createEvent)
+		//TODO:  error handling
+		if err != nil {
+			return err
+		}
+		logrus.Infof("New event with type %s was created, %s", event.TypeTitle, event.CreatedAt.Format(time.RFC3339))
 
 		if string(msg.Key) == "THE END" {
+			i++
 			break
 		}
 	}
 	logrus.Infof("Finished. Received %d messages.\n", i)
 
 	return nil
-}
-
-type TestEventStructFromProducer struct {
-	Name     string    `json:"name"`
-	Currency int64     `json:"currency"`
-	SomeTime time.Time `json:"some_time"`
 }

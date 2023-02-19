@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"event_service/internal/config"
+	"event_service/internal/event/repositories"
 	"event_service/internal/event/transport/kafka"
+	"event_service/internal/event/usecases"
 	logger "event_service/pkg/log"
 	"github.com/Shopify/sarama"
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	"log"
 )
@@ -27,6 +31,15 @@ func runKafkaConsumer() (err error) {
 	}
 	logrus.Info("init config... OK")
 
+	db, err := sqlx.Open("postgres", appConfig.PostgresConnLink)
+	if err != nil {
+		return err
+	}
+	logrus.Info("init DB... OK")
+
+	repo := repositories.NewPsqlRepository(db)
+	useCase := usecases.NewUseCase(repo)
+
 	saramaConfig := sarama.NewConfig()
 	// Handle errors manually
 	saramaConfig.Consumer.Return.Errors = true
@@ -36,7 +49,9 @@ func runKafkaConsumer() (err error) {
 		return err
 	}
 
-	kh := kafka.New(saramaClient)
+	kh := kafka.New(saramaClient, useCase)
 
-	return kh.Handle()
+	ctx := context.TODO()
+
+	return kh.Handle(ctx)
 }
