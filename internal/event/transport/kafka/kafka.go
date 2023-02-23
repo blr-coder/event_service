@@ -43,8 +43,7 @@ func (h *Handler) Handle(ctx context.Context) error {
 
 	i := 0
 	var createEvent *usecase_models.CreateEventInput
-	for ; ; i++ {
-		msg := <-partitionConsumer.Messages()
+	for msg := range partitionConsumer.Messages() {
 
 		err = json.Unmarshal(msg.Value, &createEvent)
 		//TODO:  error handling
@@ -61,7 +60,6 @@ func (h *Handler) Handle(ctx context.Context) error {
 
 		if string(msg.Key) == "THE END" {
 			i++
-			break
 		}
 	}
 	logrus.Infof("Finished. Received %d messages.\n", i)
