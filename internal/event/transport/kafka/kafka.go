@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
+	"time"
+
 	"github.com/Shopify/sarama"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 type Handler struct {
@@ -23,7 +24,6 @@ func New(client sarama.Client, useCase *usecases.UseCase) *Handler {
 }
 
 func (h *Handler) Handle(ctx context.Context) error {
-
 	consumer, err := sarama.NewConsumerFromClient(h.kafkaClient)
 	if err != nil {
 		return err
@@ -44,7 +44,6 @@ func (h *Handler) Handle(ctx context.Context) error {
 	i := 0
 	var createEvent *usecase_models.CreateEventInput
 	for msg := range partitionConsumer.Messages() {
-
 		err = json.Unmarshal(msg.Value, &createEvent)
 		//TODO:  error handling
 		if err != nil {

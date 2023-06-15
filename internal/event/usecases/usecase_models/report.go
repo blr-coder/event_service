@@ -2,8 +2,9 @@ package usecase_models
 
 import (
 	"event_service/internal/event/usecases/usecase_errors"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"time"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type Report struct {
@@ -23,7 +24,6 @@ type ReportFilter struct {
 }
 
 func (f *ReportFilter) Validate() error {
-
 	err := validation.ValidateStruct(
 		f,
 		//TODO: How I can validate time on this case? (And maybe we need validate period between from and to?)

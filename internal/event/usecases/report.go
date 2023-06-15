@@ -17,7 +17,6 @@ func NewReportUseCase(repository *repositories.Repository) *ReportUseCase {
 }
 
 func (c *ReportUseCase) List(ctx context.Context, filter *usecase_models.ReportFilter) (usecase_models.Reports, error) {
-
 	if err := filter.Validate(); err != nil {
 		// TODO: add good errors handling
 		return nil, err
@@ -32,7 +31,6 @@ func (c *ReportUseCase) List(ctx context.Context, filter *usecase_models.ReportF
 }
 
 func useCaseReportFilterToRepo(filter *usecase_models.ReportFilter) *repository_models.ReportRepositoryFilter {
-
 	repoFilter := &repository_models.ReportRepositoryFilter{
 		From:    filter.From,
 		To:      filter.To,

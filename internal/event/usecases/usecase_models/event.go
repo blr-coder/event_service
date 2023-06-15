@@ -2,8 +2,9 @@ package usecase_models
 
 import (
 	"event_service/internal/event/usecases/usecase_errors"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"time"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type Event struct {

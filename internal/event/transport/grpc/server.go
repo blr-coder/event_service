@@ -4,11 +4,11 @@ import (
 	"event_service/api/grpc/event_proto"
 	"event_service/api/grpc/event_type_proto"
 	"event_service/api/grpc/report_proto"
+
 	"google.golang.org/grpc"
 )
 
 func NewGRPCServer(eventServer *EventServiceServer, eventTypeServer *EventTypeServiceServer, reportServer *ReportServiceServer) *grpc.Server {
-
 	grpcServer := grpc.NewServer()
 
 	// register grpcServerServices

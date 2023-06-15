@@ -5,6 +5,7 @@ import (
 	"event_service/api/grpc/event_proto"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -23,7 +24,6 @@ func (s *EventServiceServer) Create(
 	ctx context.Context,
 	grpcRequest *event_proto.CreateEventRequest,
 ) (*event_proto.Event, error) {
-
 	event, err := s.useCase.Event.Create(ctx, grpcCreateEventToUCInput(grpcRequest))
 	if err != nil {
 		// TODO: Add decodeError func
@@ -37,7 +37,6 @@ func (s *EventServiceServer) List(
 	ctx context.Context,
 	grpcFilter *event_proto.ListEventFilter,
 ) (*event_proto.Events, error) {
-
 	ucEventsList, err := s.useCase.Event.List(ctx, grpcEventFilterToUCFilter(grpcFilter))
 	if err != nil {
 		return nil, err
@@ -60,7 +59,6 @@ func ucEventsListToGrpc(eventsWithCount *usecase_models.Events) *event_proto.Eve
 }
 
 func grpcEventFilterToUCFilter(grpcFilter *event_proto.ListEventFilter) *usecase_models.EventFilter {
-
 	ucFilter := &usecase_models.EventFilter{}
 
 	if grpcFilter.TypeTitle != nil {

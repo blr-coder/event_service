@@ -49,7 +49,6 @@ func (c *EventTypeUseCase) Update(ctx context.Context, updateEventType *usecase_
 }
 
 func (c *EventTypeUseCase) Delete(ctx context.Context, deleteEventType *usecase_models.DeleteEventTypeInput) error {
-
 	return c.repository.EventType.Delete(ctx, useCaseDeleteEventTypeDtoToRepo(deleteEventType))
 }
 
@@ -68,7 +67,6 @@ func repoEventTypeDtoToUseCase(repoEventType *repository_models.EventTypeReposit
 }
 
 func useCaseFilterEventTypeToRepo(filter *usecase_models.EventTypeFilter) *repository_models.EventTypeRepositoryFilter {
-
 	repoFilter := &repository_models.EventTypeRepositoryFilter{
 		Titles:     filter.Titles,
 		Search:     filter.Search,

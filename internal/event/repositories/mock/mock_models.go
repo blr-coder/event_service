@@ -2,9 +2,10 @@ package mock_repositories
 
 import (
 	"event_service/internal/event/repositories/repository_models"
-	"github.com/jaswdr/faker"
 	"testing"
 	"time"
+
+	"github.com/jaswdr/faker"
 )
 
 func NewRepoEvent(t *testing.T) *repository_models.EventRepositoryDTO {

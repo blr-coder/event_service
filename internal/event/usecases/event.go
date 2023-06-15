@@ -41,7 +41,6 @@ func (c *EventUseCase) List(ctx context.Context, filter *usecase_models.EventFil
 }
 
 func repoEventsToUseCase(repoEvents []*repository_models.EventRepositoryDTO, repoCount uint64) *usecase_models.Events {
-
 	events := make([]*usecase_models.Event, 0, len(repoEvents))
 
 	for _, e := range repoEvents {
@@ -55,7 +54,6 @@ func repoEventsToUseCase(repoEvents []*repository_models.EventRepositoryDTO, rep
 }
 
 func useCaseEventFilterToRepo(filter *usecase_models.EventFilter) *repository_models.EventRepositoryFilter {
-
 	repoFilter := &repository_models.EventRepositoryFilter{
 		TypeTitle:    filter.TypeTitle,
 		CampaignID:   filter.CampaignID,

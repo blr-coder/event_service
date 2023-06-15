@@ -5,6 +5,7 @@ import (
 	"event_service/internal/event/repositories/mongo_store"
 	"event_service/internal/event/repositories/pg_store"
 	"event_service/internal/event/repositories/repository_models"
+
 	"github.com/jmoiron/sqlx"
 	"go.mongodb.org/mongo-driver/mongo"
 )

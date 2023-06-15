@@ -6,15 +6,15 @@ import (
 	mock_repositories "event_service/internal/event/repositories/mock"
 	"event_service/internal/event/repositories/repository_models"
 	"event_service/internal/event/usecases/usecase_models"
+	"testing"
+	"time"
+
 	"github.com/golang/mock/gomock"
 	"github.com/jaswdr/faker"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestEventTypeUseCase_Create(t *testing.T) {
-
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 

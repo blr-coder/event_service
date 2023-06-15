@@ -4,8 +4,9 @@ import (
 	"context"
 	"event_service/internal/event/repositories/repository_models"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type ReportPsqlStore struct {
@@ -17,7 +18,6 @@ func NewReportPsqlStore(db *sqlx.DB) *ReportPsqlStore {
 }
 
 func (s *ReportPsqlStore) List(ctx context.Context, repositoryFilter *repository_models.ReportRepositoryFilter) (reports []*repository_models.Report, err error) {
-
 	err = s.db.SelectContext(ctx, &reports, s.repositoryFilterToQuery(repositoryFilter))
 	if err != nil {
 		return nil, err
@@ -27,7 +27,6 @@ func (s *ReportPsqlStore) List(ctx context.Context, repositoryFilter *repository
 }
 
 func (s *ReportPsqlStore) repositoryFilterToQuery(filter *repository_models.ReportRepositoryFilter) string {
-
 	query := fmt.Sprintf("SELECT type_title, count(type_title), sum(cost_amount), date_trunc('%s', created_at) AS date FROM events WHERE created_at >= '%s' AND created_at < '%s'", filter.GroupBy, filter.From.Format(time.RFC3339), filter.To.Format(time.RFC3339))
 
 	if filter.UserID != nil {

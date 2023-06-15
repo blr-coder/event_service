@@ -7,10 +7,11 @@ import (
 	"event_service/internal/event/transport/kafka"
 	"event_service/internal/event/usecases"
 	logger "event_service/pkg/log"
+	"log"
+
 	"github.com/Shopify/sarama"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
-	"log"
 )
 
 func main() {
@@ -20,7 +21,6 @@ func main() {
 }
 
 func runKafkaConsumer() (err error) {
-
 	logger.InitLogger()
 
 	logrus.Info("RUN KAFKA WORKER...")

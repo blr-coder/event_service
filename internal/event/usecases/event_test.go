@@ -3,13 +3,14 @@ package usecases
 import (
 	"context"
 	"event_service/internal/event/repositories"
-	"event_service/internal/event/repositories/mock"
+	mock_repositories "event_service/internal/event/repositories/mock"
 	"event_service/internal/event/repositories/repository_models"
 	"event_service/internal/event/usecases/usecase_errors"
 	"event_service/internal/event/usecases/usecase_models"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
-	"testing"
 )
 
 // EventTestsSuite - набор тестов для событий :)
@@ -206,7 +207,7 @@ func (ts *EventTestsSuite) TestListOK() {
 			ts.Require().Equal(tt.want, actual)
 			ts.Require().Equal(tt.wantErr, err)
 			// TODO: В чэм разница??? Какой юзать?
-			//ts.Assert().Equal(tt.wantErr, err)
+			// ts.Assert().Equal(tt.wantErr, err)
 			//ts.Assert().Equal(tt.want, actual)
 		})
 	}
@@ -253,5 +254,4 @@ func (ts *EventTestsSuite) TestListRepoErr() {
 			ts.Require().NotEmpty(err)
 		})
 	}
-
 }

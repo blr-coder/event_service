@@ -2,9 +2,10 @@ package mock_usecases
 
 import (
 	"event_service/internal/event/usecases/usecase_models"
-	"github.com/jaswdr/faker"
 	"testing"
 	"time"
+
+	"github.com/jaswdr/faker"
 )
 
 func NewEvent(t *testing.T) *usecase_models.Event {

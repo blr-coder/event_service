@@ -4,8 +4,9 @@ import (
 	"context"
 	"event_service/internal/event/repositories/repository_models"
 	"fmt"
-	"github.com/pkg/errors"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	// DB driver
 	"github.com/jmoiron/sqlx"
@@ -24,7 +25,6 @@ func (s *EventTypePsqlStore) Create(
 	ctx context.Context,
 	createEventType *repository_models.CreateEventTypeRepositoryDTO,
 ) (*repository_models.EventTypeRepositoryDTO, error) {
-
 	query := `
 		INSERT INTO event_types (title) 
 		VALUES ($1)
@@ -42,7 +42,6 @@ func (s *EventTypePsqlStore) List(
 	ctx context.Context,
 	repositoryFilter *repository_models.EventTypeRepositoryFilter,
 ) (types []*repository_models.EventTypeRepositoryDTO, count uint64, err error) {
-
 	listQuery := `
 		SELECT title, created_at, updated_at FROM event_types WHERE deleted_at IS NULL
 	`
@@ -69,7 +68,6 @@ func (s *EventTypePsqlStore) Update(
 	ctx context.Context,
 	updateEventType *repository_models.UpdateEventTypeRepositoryDTO,
 ) (*repository_models.EventTypeRepositoryDTO, error) {
-
 	query := `
 		UPDATE event_types SET title=$2, updated_at=(now() AT TIME ZONE 'utc') WHERE title=$1 RETURNING *
 	`
@@ -88,7 +86,6 @@ func (s *EventTypePsqlStore) Delete(
 	ctx context.Context,
 	deleteEventType *repository_models.DeleteEventTypeRepositoryDTO,
 ) error {
-
 	query := `
 		UPDATE event_types SET 
 		                       updated_at=(now() AT TIME ZONE 'utc'), 
@@ -120,8 +117,7 @@ func (s *EventTypePsqlStore) decodeRepositoryFilter(
 	filter *repository_models.EventTypeRepositoryFilter,
 	paginate bool,
 ) (string, []any) {
-
-	query = fmt.Sprintf("%s", query)
+	query = query
 	var args []any
 
 	if filter.Titles != nil {

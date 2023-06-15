@@ -7,9 +7,10 @@ import (
 	"event_service/internal/event/usecases"
 	"event_service/pkg/log"
 	"fmt"
+	"net"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
-	"net"
 )
 
 func runEventApp() (err error) {

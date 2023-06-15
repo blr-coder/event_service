@@ -5,6 +5,7 @@ import (
 	"event_service/api/grpc/event_type_proto"
 	"event_service/internal/event/usecases"
 	"event_service/internal/event/usecases/usecase_models"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -25,7 +26,6 @@ func (s *EventTypeServiceServer) Create(
 	ctx context.Context,
 	request *event_type_proto.CreateEventTypeRequest,
 ) (*event_type_proto.EventType, error) {
-
 	eventType, err := s.useCase.EventType.Create(ctx, grpcCreateEventTypeToModelCreate(request))
 	if err != nil {
 		// TODO: Add decodeError func
@@ -36,7 +36,6 @@ func (s *EventTypeServiceServer) Create(
 }
 
 func (s *EventTypeServiceServer) List(ctx context.Context, filter *event_type_proto.EventTypeFilter) (*event_type_proto.EventTypes, error) {
-
 	types, count, err := s.useCase.EventType.List(ctx, grpcListFilterToModelFilter(filter))
 	if err != nil {
 		// TODO: Add decodeError func
@@ -50,7 +49,6 @@ func (s *EventTypeServiceServer) Update(
 	ctx context.Context,
 	request *event_type_proto.UpdateEventTypeRequest,
 ) (*event_type_proto.EventType, error) {
-
 	eventType, err := s.useCase.EventType.Update(ctx, grpcUpdateEventTypeToModelUpdate(request))
 	if err != nil {
 		// TODO: Add decodeError func
@@ -64,7 +62,6 @@ func (s *EventTypeServiceServer) Delete(
 	ctx context.Context,
 	request *event_type_proto.DeleteEventTypeRequest,
 ) (*emptypb.Empty, error) {
-
 	return &empty.Empty{}, s.useCase.EventType.Delete(ctx, grpcDeleteEventTypeToModelUpdate(request))
 }
 
@@ -100,7 +97,6 @@ func grpcListFilterToModelFilter(grpcFilter *event_type_proto.EventTypeFilter) *
 	}
 
 	if grpcFilter.OrderDirection != event_type_proto.EventTypeSortOrder_EMPTY {
-
 		var direction usecase_models.OrderDirection
 
 		switch grpcFilter.OrderDirection {

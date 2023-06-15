@@ -4,8 +4,9 @@ import (
 	"context"
 	"event_service/internal/event/repositories/repository_models"
 	"fmt"
-	"github.com/pkg/errors"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	// DB driver
 	"github.com/jmoiron/sqlx"
@@ -23,7 +24,6 @@ func NewEventPsqlStore(database *sqlx.DB) *EventPsqlStore {
 func (s *EventPsqlStore) Create(
 	ctx context.Context, createEvent *repository_models.CreateEventRepositoryDTO,
 ) (*repository_models.EventRepositoryDTO, error) {
-
 	query := `
 		INSERT INTO events 
 		    (type_title, campaign_id, insertion_id, user_id, cost_amount, cost_currency)
@@ -50,7 +50,6 @@ func (s *EventPsqlStore) Create(
 }
 
 func (s *EventPsqlStore) List(ctx context.Context, filter *repository_models.EventRepositoryFilter) (events []*repository_models.EventRepositoryDTO, count uint64, err error) {
-
 	listQuery := `
 		SELECT id, type_title, campaign_id, insertion_id, user_id, cost_amount, cost_currency, created_at FROM events
 	`
@@ -78,7 +77,6 @@ func (s *EventPsqlStore) decodeRepositoryFilter(
 	filter *repository_models.EventRepositoryFilter,
 	paginate bool,
 ) (string, []any) {
-
 	query = fmt.Sprintf("%s WHERE TRUE", query)
 	var args []any
 
